@@ -1,6 +1,6 @@
 # README #
 
-Galicaster plugins to control cameras of the visca and onvif protocol.
+Galicaster plugins to control cameras of visca and onvif protocol.
 
 ### What is this repository for? ###
 
