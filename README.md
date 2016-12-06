@@ -28,8 +28,8 @@ cd cameracontrol
 * Copy all relevant files to your Galicaster install like below:
 ```
 cp -r img/ ~/path/to/Galicaster/resources/images/.
-cp cmctrl.css ~/path/to/Galicaster/resources/ui/.
-cd cmctrl-visca
+cp camctrl.css ~/path/to/Galicaster/resources/ui/.
+cd camctrl-visca
 cp camctrl-visca.glade ~/path/to/Galicaster/resources/ui/.
 cp camctrl-visca.py ~/path/to/Galicaster/galicaster/plugins/.
 
@@ -47,8 +47,8 @@ port = /dev/ttyS0
 * Copy all relevant files to your Galicaster install like below:
 ```
 cp -r img/ ~/path/to/Galicaster/resources/images/.
-cp cmctrl.css ~/path/to/Galicaster/resources/ui/.
-cd cmctrl-onvif
+cp camctrl.css ~/path/to/Galicaster/resources/ui/.
+cd camctrl-onvif
 cp camctrl-onvif.glade ~/path/to/Galicaster/resources/ui/.
 cp camctrl-onvif.py ~/path/to/Galicaster/galicaster/plugins/.
 cp camctrl_onvif_interface.py ~/path/to/Galicaster/galicaster/utils/.
@@ -62,5 +62,20 @@ cameractrl-visca = True
 ```
 ## Plugin Features ##
 ### camctrl-visca ###
-* Workflow integration: If you schedule a recording, you are now able 
+* 6 programmable presets
+* Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (0-5) and the plugin will start recording from it.
+* You can also set a preset (0-5) for start and stop in your conf.ini e.g. :
+```
+[camctrl-visca]
+record-preset = 0
+idle-preset = 5
+```
 ### camctrl-onvif ###
+* infinite number of presets (with proper names like record, idle, desk etc.)
+* Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (only normal characters for now, no äöü-_. etc.)
+* You can also set a preset (only normal characters for now, no äöü-_. etc.)) for start and stop in your conf.ini e.g. :
+'''
+[camctrl-onvif]
+record-preset = record
+idle-preset = idle
+'''
