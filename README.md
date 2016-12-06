@@ -2,26 +2,36 @@
 
 Galicaster plugins to control cameras of visca and onvif protocol.
 
-### What is this repository for? ###
+## Requirements ##
+### camctrl-visca ###
+* pysca
+* python-serial
+* Galicaster 2.0.x
+### camctrl-onvif ###
+* python-onvif
+* Galicaster 2.0.x
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
-### How do I get set up? ###
+## Installation ##
+### General ###
+* Make sure you have a working 2.0.x Galicaster installed with all required dependencies (gstreamer, gtk etc.).
+* Set up a working Datapath profile
+* clone the git repository to a desired location on your machine:
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+```
+cd ~/path/to/your/location
+git clone https://svnset@bitbucket.org/svnset/cameracontrol.git
+```
+* Now follow the steps below depending on which plugin you want to install (or both)
+### camctrl-visca ###
+*
+*
+*
+### camctrl-onvif ###
+*
+*
+*
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
 
 ### Who do I talk to? ###
 
