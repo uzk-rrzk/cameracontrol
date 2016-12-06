@@ -61,3 +61,6 @@ cp camctrl_onvif_interface.py ~/path/to/Galicaster/galicaster/utils/.
 cameractrl-visca = True
 ```
 ## Plugin Features ##
+### camctrl-visca ###
+* Workflow integration: If you schedule a recording, you are now able 
+### camctrl-onvif ###
