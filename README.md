@@ -44,7 +44,22 @@ port = /dev/ttyS0
 ```
 * Note that we need to define the port where the camera is connected (default port is S0 like above)
 ### camctrl-onvif ###
-*
+* Copy all relevant files to your Galicaster install like below:
+```
+cp -r img/ ~/path/to/Galicaster/resources/images/.
+cp cmctrl.css ~/path/to/Galicaster/resources/ui/.
+cd cmctrl-onvif
+cp camctrl-onvif.glade ~/path/to/Galicaster/resources/ui/.
+cp camctrl-onvif.py ~/path/to/Galicaster/galicaster/plugins/.
+cp camctrl_onvif_interface.py ~/path/to/Galicaster/galicaster/utils/.
+
+```
+* We need to edit our conf.ini to activate the plugin at Galicaster startup:
+* add the following lines to do so:
+```
+[plugins]
+cameractrl-visca = True
+```
 *
 *
 
