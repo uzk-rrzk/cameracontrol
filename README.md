@@ -60,11 +60,4 @@ cp camctrl_onvif_interface.py ~/path/to/Galicaster/galicaster/utils/.
 [plugins]
 cameractrl-visca = True
 ```
-*
-*
-
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+## Plugin Features ##
