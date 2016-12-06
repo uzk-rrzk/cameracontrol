@@ -21,12 +21,28 @@ Galicaster plugins to control cameras of visca and onvif protocol.
 ```
 cd ~/path/to/your/location
 git clone https://svnset@bitbucket.org/svnset/cameracontrol.git
+cd cameracontrol
 ```
 * Now follow the steps below depending on which plugin you want to install (or both)
 ### camctrl-visca ###
-*
-*
-*
+* Copy all relevant files to your Galicaster install like below:
+```
+cp -r img/ ~/path/to/Galicaster/resources/images/.
+cp cmctrl.css ~/path/to/Galicaster/resources/ui/.
+cd cmctrl-visca
+cp camctrl-visca.glade ~/path/to/Galicaster/resources/ui/.
+cp camctrl-visca.py ~/path/to/Galicaster/galicaster/plugins/.
+
+```
+* We need to edit our conf.ini to activate the plugin at Galicaster startup:
+* add the following lines to do so:
+```
+[plugins]
+cameractrl-visca = True
+[cameractrl-visca]
+port = /dev/ttyS0
+```
+* Note that we need to define the port where the camera is connected (default port is S0 like above)
 ### camctrl-onvif ###
 *
 *
