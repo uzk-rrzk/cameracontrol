@@ -74,8 +74,8 @@ idle-preset = 5
 * infinite number of presets (with proper names like record, idle, desk etc.)
 * Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (only normal characters for now, no äöü-_. etc.)
 * You can also set a preset (only normal characters for now, no äöü-_. etc.)) for start and stop in your conf.ini e.g. :
-'''
+```
 [camctrl-onvif]
 record-preset = record
 idle-preset = idle
-'''
+```
