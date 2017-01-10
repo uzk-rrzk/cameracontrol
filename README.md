@@ -37,10 +37,18 @@ cp camctrl_onvif_interface.py ~/path/to/Galicaster/galicaster/utils/.
 ```
 [plugins]
 camctrl = True
-
-
 ```
-* Note that we need to define the port where a compatible visca camera is connected to use the visca backend (default port is S0 like below)
+* Now we need to further choose what backend we want to use:
+```
+[camctrl]
+backend = visca
+```
+*or:
+```
+[camctrl]
+backend = onvif
+```
+* Note that we need to define the port where our visca camera is connected to use the visca backend (default port is S0 like below)
 ```
 [camctrl]
 port = /dev/ttyS0
