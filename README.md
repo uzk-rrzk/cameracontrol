@@ -1,6 +1,6 @@
 # README #
 
-Galicaster plugins to control cameras of visca and onvif protocol.
+Galicaster plugin to control cameras of visca and onvif protocol.
 
 ## Requirements ##
 ### camctrl-visca ###
