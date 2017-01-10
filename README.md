@@ -23,8 +23,6 @@ cd ~/path/to/your/location
 git clone https://svnset@bitbucket.org/svnset/cameracontrol.git
 cd cameracontrol
 ```
-* Now follow the steps below
-### camctrl-visca ###
 * Copy all relevant files to your Galicaster install like below:
 ```
 cp -r img/ ~/path/to/Galicaster/resources/images/.
@@ -35,8 +33,7 @@ cp camctrl-onvif.glade ~/path/to/Galicaster/resources/ui/.
 cp camctrl_onvif_interface.py ~/path/to/Galicaster/galicaster/utils/.
 
 ```
-* We need to edit our conf.ini to activate the plugin at Galicaster startup:
-* add the following lines to do so:
+* We need to edit our conf.ini to activate the plugin at Galicaster startup, add the following lines to do so:
 ```
 [plugins]
 camctrl = True
