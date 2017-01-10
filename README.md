@@ -43,12 +43,12 @@ camctrl = True
 [camctrl]
 backend = visca
 ```
-*or:
+* or:
 ```
 [camctrl]
 backend = onvif
 ```
-* Note that we need to define the port where our visca camera is connected to use the visca backend (default port is S0 like below)
+* To use the visca backend, note that we also need to define the port where our visca camera is connected(default port is S0 like below)
 ```
 [camctrl]
 port = /dev/ttyS0
