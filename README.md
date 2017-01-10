@@ -38,7 +38,7 @@ cp camctrl_onvif_interface.py ~/path/to/Galicaster/galicaster/utils/.
 [plugins]
 camctrl = True
 ```
-* Now we need to further choose what backend we want to use:
+* Now we need to choose what backend we want to use:
 ```
 [camctrl]
 backend = visca
