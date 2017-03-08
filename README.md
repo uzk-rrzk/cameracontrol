@@ -56,7 +56,6 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
 
 ## Plugin Features ##
 ### camctrl-visca ###
-* Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (0-5) and the plugin will start recording from it.
 * You can configure the plugin to call a certain preset before recording (`record-preset`) and also after finishing a recording (`idle-preset`). Presets go from 0 to 5, which correspond to the presets 1-6 defined by VISCA. A sample configuration in Galicaster's `conf.ini` file is:
 
         [camctrl]
@@ -68,7 +67,6 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
 ### camctrl-onvif ###
 * Infinite number of presets with full names like "record", "idle", "desk", etc. 
     * Preset names may consist of alphanumerical characters only. Punctuation characters (like "-" or ".") and non-English characters (like "ä", "é" or "ñ") are not yet allowed.
-* Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (only normal characters for now, no äöü-_. etc.)
 * You can configure the plugin to call a certain preset before recording (`record-preset`) and also after finishing a recording (`idle-preset`). For instance:
 
         [camctrl]
