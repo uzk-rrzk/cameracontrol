@@ -1,6 +1,6 @@
 # README #
 
-Galicaster plugin to control cameras of visca and onvif protocol.
+Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protocols.
 
 ## Requirements ##
 ### camctrl-visca ###
@@ -14,62 +14,64 @@ Galicaster plugin to control cameras of visca and onvif protocol.
 
 ## Installation ##
 ### General ###
-* Make sure you have a working 2.0.x Galicaster installed with all required dependencies (gstreamer, gtk etc.).
-* Set up a working Datapath/RTP profile
-* clone the git repository to a desired location on your machine:
+* Make sure you have a working Galicaster 2.0.x installed with all required dependencies (Gstreamer, GTK, etc.).
+* Clone the git repository to a desired location on your machine:
 
-```
-cd ~/path/to/your/location
-git clone https://svnset@bitbucket.org/svnset/cameracontrol.git
-cd cameracontrol
-```
+        :::sh
+        git clone https://bitbucket.org/svnset/cameracontrol.git
+        cd cameracontrol
+
 * Copy all relevant files to your Galicaster install like below:
-```
-cp -r img/ ~/path/to/Galicaster/resources/images/.
-cp camctrl.py ~/path/to/Galicaster/galicaster/plugins/.
-cp camctrl.css ~/path/to/Galicaster/resources/ui/.
-cp camctrl-visca.glade ~/path/to/Galicaster/resources/ui/.
-cp camctrl-onvif.glade ~/path/to/Galicaster/resources/ui/.
-cp camctrl_onvif_interface.py ~/path/to/Galicaster/galicaster/utils/.
 
-```
-* We need to edit our conf.ini to activate the plugin at Galicaster startup, add the following lines to do so:
-```
-[plugins]
-camctrl = True
-```
+        :::sh
+        cp -r img/ $GALICASTER/resources/images/.
+        cp camctrl.py $GALICASTER/galicaster/plugins/.
+        cp camctrl.css $GALICASTER/resources/ui/.
+        cp camctrl-visca.glade $GALICASTER/resources/ui/.
+        cp camctrl-onvif.glade $GALICASTER/resources/ui/.
+        cp camctrl_onvif_interface.py $GALICASTER/galicaster/utils/.
+
+    , where `$GALICASTER` represents the location Galicaster within the system. If you used the official packages, that should be in `/usr/share/galicaster`
+
+* Edit your `conf.ini` file (`/etc/galicaster/conf.ini` if installed from the official .deb package) to activate the plugin:
+
+        [plugins]
+        camctrl = True
+
 * Now we need to choose what backend we want to use:
-```
-[camctrl]
-backend = visca
-```
-* or:
-```
-[camctrl]
-backend = onvif
-```
-* To use the visca backend, note that we also need to define the port where our visca camera is connected(default port is S0 like below)
-```
-[camctrl]
-port = /dev/ttyS0
-```
+
+        [camctrl]
+        backend = visca
+
+    or:
+
+        [camctrl]
+        backend = onvif
+
+* To use the VISCA backend, note that we also need to define the port where our VISCA camera is connected (default port is S0 like below)
+
+        [camctrl]
+        backend = visca
+        port = /dev/ttyS0
 
 ## Plugin Features ##
 ### camctrl-visca ###
-* 6 programmable presets
 * Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (0-5) and the plugin will start recording from it.
-* You can also set a preset (0-5) for start and stop in your conf.ini e.g. :
-```
-[camctrl]
-record-preset = 0
-idle-preset = 5
-```
+* You can configure the plugin to call a certain preset before recording (`record-preset`) and also after finishing a recording (`idle-preset`). Presets go from 0 to 5, which correspond to the presets 1-6 defined by VISCA. A sample configuration in Galicaster's `conf.ini` file is:
+
+        [camctrl]
+        backend = visca
+        port = /dev/ttyS0
+        record-preset = 0
+        idle-preset = 5
+
 ### camctrl-onvif ###
-* infinite number of presets (with proper names like record, idle, desk etc.)
+* Infinite number of presets with full names like "record", "idle", "desk", etc. 
+    * Preset names may consist of alphanumerical characters only. Punctuation characters (like "-" or ".") and non-English characters (like "ä", "é" or "ñ") are not yet allowed.
 * Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (only normal characters for now, no äöü-_. etc.)
-* You can also set a preset (only normal characters for now, no äöü-_. etc.)) for start and stop in your conf.ini e.g. :
-```
-[camctrl]
-record-preset = record
-idle-preset = idle
-```
+* You can configure the plugin to call a certain preset before recording (`record-preset`) and also after finishing a recording (`idle-preset`). For instance:
+
+        [camctrl]
+        backend = onvif
+        record-preset = record
+        idle-preset = idle
