@@ -18,7 +18,7 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
 * Clone the git repository to a desired location on your machine:
 
         :::sh
-        git clone https://bitbucket.org/svnset/cameracontrol.git
+        git clone https://bitbucket.org/uni-koeln/cameracontrol.git
         cd cameracontrol
 
 * Copy all relevant files to your Galicaster install like below:
