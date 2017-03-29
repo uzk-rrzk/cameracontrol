@@ -170,7 +170,7 @@ class AXIS_V5915():
     def go_to_preset(self, number):
         req_goto_preset.PresetToken = number
         ptz.GotoPreset(req_goto_preset)
-        logger.debug('Going to Preset ', number)
+        logger.debug('Going to Preset %s', number)
 
     # Sets the current Camera Position to a new Preset, with the "name" attribute
     # setPreset takes the next free available number, starting with "2"
@@ -178,13 +178,13 @@ class AXIS_V5915():
         self.stop()
         req_set_preset.PresetName = name
         preset = ptz.SetPreset(req_set_preset)
-        logger.debug('Current Position set to Preset ', preset)
+        logger.debug('Current Position set to Preset %s', preset)
 
     # Remove a preset by its number (use identifyPreset to delete by name)
     def remove_preset(self, number):
         req_remove_preset.PresetToken = number
         ptz.RemovePreset(req_remove_preset)
-        logger.debug('Removed Preset ', number)
+        logger.debug('Removed Preset %s', number)
 
     # Get a list of all present presets except for preset number 1 which is home
     def get_presets(self):
