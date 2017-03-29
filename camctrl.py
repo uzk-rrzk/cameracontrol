@@ -10,7 +10,7 @@ import galicaster.utils.pysca as pysca
 import galicaster.utils.camctrl_onvif_interface as camera 
 
 
-#DEFAULTS
+# DEFAULTS
 # This is the default Visca device this plugin talks to
 DEFAULT_DEVICE = 1
 
@@ -29,7 +29,7 @@ RECORD_PRESET_KEY = 'record-preset'
 IDLE_PRESET_KEY= 'idle-preset'
 
 # This is the key containing the port (path to the device) to use when recording
-PORT_KEY = "port"
+PORT_KEY = "device-port"
 
 # This is the key specifying the backend (visca or onvif)
 BACKEND = 'backend'
@@ -37,6 +37,22 @@ BACKEND = 'backend'
 # This is the name of this plugin's section in the configuration file
 CONFIG_SECTION = "camctrl"
 
+# This are the credentials, which have to be set in the configuration file
+IPADDRESS = "ip"
+USERNAME = "username"
+PASSWORD = "password"
+PORT = "port"
+
+# DEFAULt VALUES
+# VISCA
+DEFAULT_MOVESCALE = 7
+DEFAULT_BRIGHTNESS = 15
+DEFAULT_BRIGHTSCALE = 0
+DEFAULT_ZOOM = 0
+DEFAULT_ZOOMSCALE = 3.5
+# ONVIF
+DEFAULT_ZOOMSCALE_ONVIF = 0.5
+DEFAULT_MOVESCALE_0NVIF = 0.5
 
 
 def init():
@@ -52,19 +68,22 @@ def init():
     if backend == "onvif":
         global cam
         # connect to the camera
-        ip = '134.95.128.120'
-        username = "root"
-        password = "opencast"
-
+        ip = config.get(IPADDRESS)
+        username = config.get(USERNAME)
+        password = config.get(PASSWORD)
+        if config.get(PORT) is None:
+            port = 80
+        else:
+            port = config.get(PORT)
         cam = camera.AXIS_V5915()
-        cam.connect(ip, username, password)
+        cam.connect(ip, port, username, password)
 
         # initiate the onvif user interface
         dispatcher.connect("init", init_onvif_ui)
         dispatcher.connect("recorder-starting", onvif_interface.on_start_recording)
         dispatcher.connect("recorder-stopped", onvif_interface.on_stop_recording)
     
-    if backend == "visca":
+    elif backend == "visca":
         
         # If port is not defined, a None value will make this method fail
         pysca.connect(config.get(PORT_KEY))
@@ -73,8 +92,9 @@ def init():
         dispatcher.connect("init", init_visca_ui)
         dispatcher.connect('recorder-starting', visca_interface.on_start_recording)
         dispatcher.connect('recorder-stopped', visca_interface.on_stop_recording)
-
-    logger.info("Cam connected")
+    else:
+        logger.warn("WARNING: You have to choose a backend in the config file before starting Galicaster, otherwise the cameracontrol plugin does not work.")
+    logger.info("Camera connected.")
 
 
 # VISCA USER INTERFACE
@@ -226,7 +246,7 @@ def init_visca_ui(element):
     zoomscale = builder.get_object("zoomscale")
 
 
-# ONVIF USER INTERFACE       
+# ONVIF USER INTERFACE
 def init_onvif_ui(element):
     global recorder_ui, brightscale, movescale, zoomscale, presetlist, presetdelbutton, flybutton, builder, prefbutton, newpreset
 
@@ -234,7 +254,7 @@ def init_onvif_ui(element):
 
     recorder_ui = context.get_mainwindow().nbox.get_nth_page(0).gui
 
-# load css file
+    # load css file
     css = Gtk.CssProvider()
     css.load_from_path(get_ui_path("camctrl.css"))
 
@@ -253,9 +273,8 @@ def init_onvif_ui(element):
     notebook = recorder_ui.get_object("data_panel")
     mainbox = builder.get_object("mainbox")
     label = builder.get_object("notebooklabel")
-    mainbox.show_all()
+    #  mainbox.show_all()
     notebook.append_page(mainbox, label)
-    notebook.show_all()
 
     # images
     upimg = Gtk.Image.new_from_file(get_image_path("img/up.svg"))
@@ -268,6 +287,7 @@ def init_onvif_ui(element):
     leftdownimg = Gtk.Image.new_from_file(get_image_path("img/leftdown.svg"))
     #  homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg")) 
 
+    notebook.show_all()
     upimg.show()
     downimg.show()
     rightimg.show()
@@ -324,7 +344,7 @@ def init_onvif_ui(element):
     #  button.add(homeimg)
     button.connect("clicked", onvif.move_home)
 
-# zoom
+    # zoom
     button = builder.get_object("zoomin")
     button.connect("pressed", onvif.zoom_in)
     button.connect("released", onvif.stop_move)
@@ -333,114 +353,114 @@ def init_onvif_ui(element):
     button.connect("pressed", onvif.zoom_out)
     button.connect("released", onvif.stop_move)
 
-# presets
+    # presets
     presetlist = builder.get_object("preset_list")
     # add home position to list
-    presetlist.insert(0,"home","home")
+    presetlist.insert(0, "home", "home")
     # fill the list with current presets
-    for preset in cam.getPresets():
+    for preset in cam.get_presets():
         presetlist.append(preset.Name, preset.Name)
     presetlist.connect("changed", onvif.change_preset)
 
-# to set a new preset
+    # to set a new preset
     newpreset = builder.get_object("newpreset")
     newpreset.connect("activate", onvif.save_preset)
     newpreset.connect("icon-press", onvif.save_preset_icon)
 
 
-# to delete a preset
+    # to delete a preset
     presetdelbutton = builder.get_object("presetdel")
     presetdelbutton.connect("clicked", onvif.empty_entry)
 
-# fly-mode for camera-movement
+    # fly-mode for camera-movement
     flybutton = builder.get_object("fly")
     flybutton.connect("clicked", onvif.fly_mode)
 
-# reset all settings
+    # reset all settings
     button = builder.get_object("reset")
     button.connect("clicked", onvif.reset)
 
-# show/hide preferences
+    # show/hide preferences
     prefbutton = builder.get_object("pref")
     prefbutton.connect("clicked", onvif.show_pref)
 
-# scales
+    # scales
     #  brightscale = builder.get_object("brightscale")
     #  brightscale.connect("value-changed", set_bright)
     movescale = builder.get_object("movescale")
     zoomscale = builder.get_object("zoomscale")
-    
+
 
 # visca function interface
 class visca_interface():
     # movement functions
     def move_left(self, button):
-        print ("I move left")
+        logger.debug("I move left")
         pysca.pan_tilt(DEFAULT_DEVICE, pan=-movescale.get_value())
 
 
     def move_leftup(self, button):
-        print ("I move leftup")
+        logger.debug("I move leftup")
         pysca.pan_tilt(DEFAULT_DEVICE, pan=-movescale.get_value(), tilt=movescale.get_value())
 
 
     def move_leftdown(self, button):
-        print ("I move leftdown")
+        logger.debug("I move leftdown")
         pysca.pan_tilt(DEFAULT_DEVICE, pan=-movescale.get_value(), tilt=-movescale.get_value())
 
 
     def move_right(self, button):
-        print ("I move right")
+        logger.debug("I move right")
         pysca.pan_tilt(DEFAULT_DEVICE, pan=movescale.get_value())
 
 
     def move_rightup(self, button):
-        print ("I move rightup")
+        logger.debug("I move rightup")
         pysca.pan_tilt(DEFAULT_DEVICE, pan=movescale.get_value(), tilt=movescale.get_value())
 
 
     def move_rightdown(self, button):
-        print ("I move rightdown")
+        logger.debug("I move rightdown")
         pysca.pan_tilt(DEFAULT_DEVICE, pan=movescale.get_value(), tilt=-movescale.get_value())
 
 
     def move_up(self, button):
-        print ("I move up")
+        logger.debug("I move up")
         pysca.pan_tilt(DEFAULT_DEVICE, tilt=movescale.get_value())
 
 
     def move_down(self, button):
-        print ("I move down")
+        logger.debug("I move down")
         pysca.pan_tilt(DEFAULT_DEVICE, tilt=-movescale.get_value())
 
 
     def stop_move(self, button):
-        print ("I make a break")
+        logger.debug("I make a break")
         pysca.pan_tilt(DEFAULT_DEVICE, pan=0, tilt=0)
 
 
     def move_home(self, button):
-        print ("I move home")
+        logger.debug("I move home")
         pysca.pan_tilt_home(DEFAULT_DEVICE)
 
 
-# zoom functions
+    # zoom functions
     def zoom_in(self, button):
-        print ("zoom in")
+        logger.debug("zoom in")
         pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_TELE, speed=zoomscale.get_value())
 
 
     def zoom_out(self, button):
-        print ("zoom out")
+        logger.debug("zoom out")
         pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_WIDE, speed=zoomscale.get_value())
 
 
     def stop_zoom(self, button):
-        print ("stop zoom")
+        logger.debug("stop zoom")
         pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_STOP)
 
 
-# preset functions
+    # preset functions
     def preset1(self, button):
         if presetbutton.get_active():
             pysca.set_memory(DEFAULT_DEVICE, 0)
@@ -489,27 +509,27 @@ class visca_interface():
             pysca.recall_memory(DEFAULT_DEVICE, 5)
 
 
-# brightness scale
+    # brightness scale
     def set_bright(self, brightscale):
         pysca.set_ae_mode(DEFAULT_DEVICE, pysca.AUTO_EXPOSURE_BRIGHT_MODE)
-        pysca.set_brightness(DEFAULT_DEVICE, brightscale.get_value() + 15)
+        pysca.set_brightness(DEFAULT_DEVICE, brightscale.get_value() + DEFAULT_BRIGHTNESS)
 
 
-# reset all settings
+    # reset all settings
     def reset(self, button):
         # reset brightness
         pysca.set_ae_mode(DEFAULT_DEVICE, pysca.AUTO_EXPOSURE_BRIGHT_MODE)
-        pysca.set_brightness(DEFAULT_DEVICE, 15)
-        brightscale.set_value(0)
-        movescale.set_value(7)
-        zoomscale.set_value(3.5)
+        pysca.set_brightness(DEFAULT_DEVICE, DEFAULT_BRIGHTNESS)
+        brightscale.set_value(DEFAULT_BRIGHTSCALE)
+        movescale.set_value(DEFAULT_MOVESCALE)
+        zoomscale.set_value(DEFAULT_ZOOMSCALE)
         # reset zoom
-        pysca.set_zoom(DEFAULT_DEVICE, 0000)
+        pysca.set_zoom(DEFAULT_DEVICE, DEFAULT_ZOOM)
         # reset location
         pysca.pan_tilt_home(DEFAULT_DEVICE)
 
 
-# turns the camera on/off
+    # turns the camera on/off
     def turn_on_off(self, onoffbutton, state):
         if onoffbutton.get_active():
             pysca.set_power_on(DEFAULT_DEVICE, True)
@@ -517,32 +537,32 @@ class visca_interface():
             pysca.set_power_on(DEFAULT_DEVICE, False)
 
 
-# hides/shows the advanced preferences
+    # hides/shows the advanced preferences
     def show_pref(self, prefbutton):
         scalebox1 = builder.get_object("scales1")
         scalebox2 = builder.get_object("scales2")
         scalebox3 = builder.get_object("scales3")
         # settings button activated
         if scalebox1.get_property("visible"):
-            print ("hide advanced settings")
+            logger.debug("hide advanced settings")
             scalebox1.hide()
             scalebox2.hide()
             scalebox3.hide()
         # settings button deactivated
         else:
-            print ("show advanced settings")
+            logger.debug("show advanced settings")
             scalebox1.show()
             scalebox2.show()
             scalebox3.show()
 
 
 
-# flymode activation connects clicked signal and disconnects
-# pressed/released to keep the movement
+    # flymode activation connects clicked signal and disconnects
+    # pressed/released to keep the movement
     def fly_mode(self, flybutton):
         # fly mode turned on
         if flybutton.get_active():
-            print ("fly mode turned on")
+            logger.debug("fly mode turned on")
             button = builder.get_object("left")
             GObject.signal_handlers_destroy(button)
             button.connect("clicked", self.move_left)
@@ -584,7 +604,7 @@ class visca_interface():
 
         # fly mode turned off
         else:
-            print("fly mode turned off")
+            logger.debug("fly mode turned off")
 
             button = builder.get_object("left")
             GObject.signal_handlers_destroy(button)
@@ -643,7 +663,7 @@ class visca_interface():
             preset = int(properties['org.opencastproject.workflow.config.cameraPreset'])
 
         try:
-            pysca.set_power_on(DEFAULT_DEVICE, True, ) 
+            pysca.set_power_on(DEFAULT_DEVICE, True, )
             onoffbutton.set_active(True)
             pysca.recall_memory(DEFAULT_DEVICE, (preset))
 
@@ -667,96 +687,96 @@ class onvif_interface():
 
     # movement functions
     def move_left(self, button):
-        print ("I move left")
-        cam.goLeft(movescale.get_value())
+        logger.debug("I move left")
+        cam.go_left(movescale.get_value())
         presetlist.set_active(-1)
 
 
     def move_leftup(self, button):
-        print ("I move leftup")
-        cam.goLeftUp(movescale.get_value())
+        logger.debug("I move leftup")
+        cam.go_left_up(movescale.get_value())
         presetlist.set_active(-1)
 
 
     def move_leftdown(self, button):
-        print ("I move leftdown")
-        cam.goLeftDown(movescale.get_value())
+        logger.debug("I move leftdown")
+        cam.go_left_down(movescale.get_value())
         presetlist.set_active(-1)
 
 
     def move_right(self, button):
-        print ("I move right")
-        cam.goRight(movescale.get_value())
+        logger.debug("I move right")
+        cam.go_right(movescale.get_value())
         presetlist.set_active(-1)
 
 
     def move_rightup(self, button):
-        print ("I move rightup")
-        cam.goRightUp(movescale.get_value())
+        logger.debug("I move rightup")
+        cam.go_right_up(movescale.get_value())
         presetlist.set_active(-1)
 
 
     def move_rightdown(self, button):
-        print ("I move rightdown")
-        cam.goRightDown(movescale.get_value())
+        logger.debug("I move rightdown")
+        cam.go_right_down(movescale.get_value())
         presetlist.set_active(-1)
 
 
     def move_up(self, button):
-        print ("I move up")
-        cam.goUp(movescale.get_value())
+        logger.debug("I move up")
+        cam.go_up(movescale.get_value())
         presetlist.set_active(-1)
 
 
     def move_down(self, button):
-        print ("I move down")
-        cam.goDown(movescale.get_value())
+        logger.debug("I move down")
+        cam.go_down(movescale.get_value())
         presetlist.set_active(-1)
 
 
     def stop_move(self, button):
-        print ("I make a break")
+        logger.debug("I make a break")
         cam.stop()
 
 
     def move_home(self, button):
-        print ("I move home")
+        logger.debug("I move home")
         presetlist.set_active_id("home")
 
 
-# zoom functions
+    # zoom functions
     def zoom_in(self, button):
-        print ("zoom in")
+        logger.debug("zoom in")
         cam.zoom_in(zoomscale.get_value())
         presetlist.set_active(-1)
 
 
     def zoom_out(self, button):
-        print ("zoom out")
+        logger.debug("zoom out")
         cam.zoom_out(zoomscale.get_value())
         presetlist.set_active(-1)
 
 
-# preset functions
+    # preset functions
     def change_preset(self, presetlist):
         if len(newpreset.get_text()) > 0:
             if newpreset.get_text() == "home":
-                print ("New Home set to current position.")
+                logger.debug("New Home set to current position.")
             else:
-                print("New Preset saved: ", newpreset.get_text())
+                logger.debug("New Preset saved: ", newpreset.get_text())
         elif presetlist.get_active_text() == "home":
-            print("Going Home")
-            cam.goHome()        
+            logger.debug("Going Home")
+            cam.go_home()
         else:
             if presetdelbutton.get_active() and not presetlist.get_active_text() is None:
-                cam.removePreset(cam.identifyPreset(presetlist.get_active_text()))
+                cam.remove_preset(cam.identify_preset(presetlist.get_active_text()))
                 presetdelbutton.set_active(False)
                 presetlist.remove(presetlist.get_active())
                 
             else:
                 if not presetlist.get_active_text() is None:
-                    print("Going to: " + presetlist.get_active_text())
-                    cam.goToPreset(cam.identifyPreset(presetlist.get_active_text()))
+                    logger.debug("Going to: " + presetlist.get_active_text())
+                    cam.go_to_preset(cam.identify_preset(presetlist.get_active_text()))
 
 
     def empty_entry(self, presetdelbutton):
@@ -764,16 +784,16 @@ class onvif_interface():
             presetlist.set_active(-1)
             presetlist.remove(0)
         elif not presetdelbutton.get_active():
-            presetlist.insert(0,"home","home")
+            presetlist.insert(0, "home", "home")
 
 
     def save_preset_icon(self, newpreset, pos, event):
         if newpreset.get_text() == "home":
-            cam.setHome()
+            cam.set_home()
             presetlist.set_active_id(newpreset.get_text())
             newpreset.set_text("")
         else:
-            cam.setPreset(newpreset.get_text())
+            cam.set_preset(newpreset.get_text())
             presetlist.append(newpreset.get_text(), newpreset.get_text())
             presetlist.set_active_id(newpreset.get_text())
             newpreset.set_text("")
@@ -781,46 +801,46 @@ class onvif_interface():
 
     def save_preset(self, newpreset):
         if newpreset.get_text() == "home":
-            cam.setHome()
+            cam.set_home()
             presetlist.set_active_id(newpreset.get_text())
             newpreset.set_text("")
         else:
-            cam.setPreset(newpreset.get_text())
+            cam.set_preset(newpreset.get_text())
             presetlist.append(newpreset.get_text(), newpreset.get_text())
             presetlist.set_active_id(newpreset.get_text())
             newpreset.set_text("")
 
 
-# reset all settings
+    # reset all settings
     def reset(self, button):
-        movescale.set_value(0.5)
-        zoomscale.set_value(0.5)
+        movescale.set_value(DEFAULT_MOVESCALE_0NVIF)
+        zoomscale.set_value(DEFAULT_ZOOMSCALE_ONVIF)
         # reset location
-        cam.goHome()
+        cam.go_home()
 
 
-# hides/shows the advanced preferences
+    # hides/shows the advanced preferences
     def show_pref(self, prefbutton):
         scalebox1 = builder.get_object("scales1")
         scalebox2 = builder.get_object("scales2")
         # settings button activated
         if scalebox1.get_property("visible"):
-            print ("hide advanced settings")
+            logger.debug("hide advanced settings")
             scalebox1.hide()
             scalebox2.hide()
         # settings button deactivated
         else:
-            print ("show advanced settings")
+            logger.debug("show advanced settings")
             scalebox1.show()
             scalebox2.show()
 
 
-# flymode activation connects clicked signal and disconnects
-# pressed/released to keep the movement
+    # flymode activation connects clicked signal and disconnects
+    # pressed/released to keep the movement
     def fly_mode(self, flybutton):
         # fly mode turned on
         if flybutton.get_active():
-            print ("fly mode turned on")
+            logger.debug ("fly mode turned on")
             button = builder.get_object("left")
             GObject.signal_handlers_destroy(button)
             button.connect("clicked", self.move_left)
@@ -861,7 +881,7 @@ class onvif_interface():
 
         # fly mode turned off
         else:
-            print("fly mode turned off")
+            logger.debug("fly mode turned off")
 
             button = builder.get_object("left")
             GObject.signal_handlers_destroy(button)
@@ -911,7 +931,7 @@ class onvif_interface():
 
 
     def on_start_recording(self, elem):
-        
+
         preset = config.get(RECORD_PRESET_KEY, DEFAULT_RECORD_PRESET)
         mp = repo.get_next_mediapackage()
 
