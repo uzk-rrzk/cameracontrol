@@ -763,7 +763,7 @@ class onvif_interface():
             if newpreset.get_text() == "home":
                 logger.debug("New Home set to current position.")
             else:
-                logger.debug("New Preset saved: ", newpreset.get_text())
+                logger.debug("New Preset saved: %s", newpreset.get_text())
         elif presetlist.get_active_text() == "home":
             logger.debug("Going Home")
             cam.go_home()
