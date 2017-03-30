@@ -29,7 +29,7 @@ RECORD_PRESET_KEY = 'record-preset'
 IDLE_PRESET_KEY= 'idle-preset'
 
 # This is the key containing the port (path to the device) to use when recording
-PORT_KEY = "device-port"
+PORT_KEY = "serial-port"
 
 # This is the key specifying the backend (visca or onvif)
 BACKEND = 'backend'
@@ -44,12 +44,15 @@ PASSWORD = "password"
 PORT = "port"
 
 # DEFAULt VALUES
+DEFAULT_PORT = 80
+
 # VISCA
 DEFAULT_MOVESCALE = 7
 DEFAULT_BRIGHTNESS = 15
 DEFAULT_BRIGHTSCALE = 0
 DEFAULT_ZOOM = 0
 DEFAULT_ZOOMSCALE = 3.5
+
 # ONVIF
 DEFAULT_ZOOMSCALE_ONVIF = 0.5
 DEFAULT_MOVESCALE_0NVIF = 0.5
@@ -72,7 +75,7 @@ def init():
         username = config.get(USERNAME)
         password = config.get(PASSWORD)
         if config.get(PORT) is None:
-            port = 80
+            port = DEFAULT_PORT
         else:
             port = config.get(PORT)
         cam = camera.AXIS_V5915()
@@ -94,6 +97,7 @@ def init():
         dispatcher.connect('recorder-stopped', visca_interface.on_stop_recording)
     else:
         logger.warn("WARNING: You have to choose a backend in the config file before starting Galicaster, otherwise the cameracontrol plugin does not work.")
+        raise RuntimeError("No backend for the cameracontrol plugin defined.") 
     logger.info("Camera connected.")
 
 
@@ -288,6 +292,7 @@ def init_onvif_ui(element):
     #  homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg")) 
 
     notebook.show_all()
+    # The new images get not afftected by show_all()
     upimg.show()
     downimg.show()
     rightimg.show()
