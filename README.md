@@ -54,13 +54,21 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
         backend = visca
         port = /dev/ttyS0
 
+* To use the ONVIF backend, it is important that we also define the credentials to connect to the SOAP-Service. Port is optional, if none set it will default to 80. (IMPORTANT: Galicaster will freeze if you set the wrong port, you will get no feedback or error message due to an internal bug in the python-onvif implementation. So make sure the port you provide is not blocked.)
+
+        [camctrl]
+        ip = <yourcameraip>
+        username = <yourusername>
+        password = <yourpass> 
+        port = 80
+
 ## Plugin Features ##
 ### camctrl-visca ###
 * You can configure the plugin to call a certain preset before recording (`record-preset`) and also after finishing a recording (`idle-preset`). Presets go from 0 to 5, which correspond to the presets 1-6 defined by VISCA. A sample configuration in Galicaster's `conf.ini` file is:
 
         [camctrl]
         backend = visca
-        port = /dev/ttyS0
+        serial-port = /dev/ttyS0
         record-preset = 0
         idle-preset = 5
 
