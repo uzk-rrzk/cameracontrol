@@ -11,7 +11,7 @@ If getting bad request while connecting, check cameras date and time
 settings and make sure it has the same time as the operating machine.
 '''
 # DEFAULTS
-HOMEPAH = os.path.expanduser("~/.local/wsdl")
+HOMEPATH = os.path.expanduser("~/.local/wsdl")
 SYSPATH = '/etc/onvif/wsdl'
 
 class AXIS_V5915():
@@ -28,7 +28,7 @@ class AXIS_V5915():
         if os.path.exists(SYSPATH):
             path = SYSPATH
         else:
-            path = HOMEPAH
+            path = HOMEPATH
         mycam = ONVIFCamera(ip, port, username, password, path)
         host = mycam.devicemgmt.GetHostname()
         logger.info('  Connected to ONVIF camera ' + str(host.Name))
