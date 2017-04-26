@@ -1,0 +1,3 @@
+[submodule "python-onvif"]
+	path = python-onvif
+	url = https://github.com/quatanium/python-onvif.git
