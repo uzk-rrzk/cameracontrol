@@ -141,6 +141,7 @@ def init_visca_ui(element):
     leftimg = Gtk.Image.new_from_file(get_image_path("img/left.svg"))
     leftupimg = Gtk.Image.new_from_file(get_image_path("img/leftup.svg"))
     leftdownimg = Gtk.Image.new_from_file(get_image_path("img/leftdown.svg"))
+    homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg"))
 
     upimg.show()
     downimg.show()
@@ -150,6 +151,7 @@ def init_visca_ui(element):
     leftimg.show()
     leftupimg.show()
     leftdownimg.show()
+    homeimg.show()
 
     # buttons
     # movement
@@ -194,6 +196,7 @@ def init_visca_ui(element):
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("home")
+    button.add(homeimg)
     button.connect("clicked", visca.move_home)
 
     # zoom
@@ -289,7 +292,7 @@ def init_onvif_ui(element):
     leftimg = Gtk.Image.new_from_file(get_image_path("img/left.svg"))
     leftupimg = Gtk.Image.new_from_file(get_image_path("img/leftup.svg"))
     leftdownimg = Gtk.Image.new_from_file(get_image_path("img/leftdown.svg"))
-    #  homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg")) 
+    homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg"))
 
     notebook.show_all()
     # The new images get not afftected by show_all()
@@ -301,7 +304,7 @@ def init_onvif_ui(element):
     leftimg.show()
     leftupimg.show()
     leftdownimg.show()
-    #  homeimg.show()
+    homeimg.show()
 
     # buttons
     # movement
@@ -346,7 +349,7 @@ def init_onvif_ui(element):
     button.connect("released", onvif.stop_move)
 
     button = builder.get_object("home")
-    #  button.add(homeimg)
+    button.add(homeimg)
     button.connect("clicked", onvif.move_home)
 
     # zoom
@@ -652,9 +655,11 @@ class visca_interface():
             button.connect("released", self.stop_move)
 
             button = builder.get_object("home")
-            img = builder.get_object("homeimg")
+            homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg"))
+            homeimg.show()
+            #  img = builder.get_object("homeimg")
             GObject.signal_handlers_destroy(button)
-            button.set_image(img)
+            button.set_image(homeimg)
             button.connect("clicked", self.move_home)
 
 
@@ -845,7 +850,7 @@ class onvif_interface():
     def fly_mode(self, flybutton):
         # fly mode turned on
         if flybutton.get_active():
-            logger.debug ("fly mode turned on")
+            logger.debug("fly mode turned on")
             button = builder.get_object("left")
             GObject.signal_handlers_destroy(button)
             button.connect("clicked", self.move_left)
@@ -929,9 +934,11 @@ class onvif_interface():
             button.connect("released", self.stop_move)
 
             button = builder.get_object("home")
-            img = builder.get_object("homeimg")
+            homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg"))
+            homeimg.show()
+            #  img = builder.get_object("homeimg")
             GObject.signal_handlers_destroy(button)
-            button.set_image(img)
+            button.set_image(homeimg)
             button.connect("clicked", self.move_home)
 
 

@@ -629,7 +629,9 @@
                     <property name="tooltip_text" translatable="yes">Return to home.</property>
                     <property name="hexpand">False</property>
                     <property name="vexpand">False</property>
-                    <property name="image">homeimg</property>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
