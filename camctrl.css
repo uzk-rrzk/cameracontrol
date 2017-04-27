@@ -19,7 +19,7 @@
     border-right: 1px solid lightgrey;
 }
 #title_box{
-    border-bottom: 1px solid lightgrey;
+    /* border-bottom: 1px solid lightgrey; */
 }
 /*leftbox*/
 #onoffbox{
@@ -32,8 +32,8 @@
 }
 /*rightbox*/
 #controlpanel{
-    border: 1px dashed lightgrey;
-    border-radius: 5px;
+    /* border: 1px dashed lightgrey; */
+    /* border-radius: 5px; */
 }
 #control{
     border: 2px dotted lightgrey;

@@ -2,7 +2,7 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gtk, Gdk, GObject
+from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
 from galicaster.core import context
 from galicaster.classui import get_ui_path
 from galicaster.classui import get_image_path
@@ -57,6 +57,9 @@ DEFAULT_ZOOMSCALE = 3.5
 DEFAULT_ZOOMSCALE_ONVIF = 0.5
 DEFAULT_MOVESCALE_0NVIF = 0.5
 
+# ARROW SIZE
+DEFAULT_ARROW_SIZE = 20
+
 
 def init():
     global recorder, dispatcher, logger, config, repo
@@ -103,7 +106,7 @@ def init():
 
 # VISCA USER INTERFACE
 def init_visca_ui(element):
-    global recorder_ui, brightscale, movescale, zoomscale, presetbutton, flybutton, builder, onoffbutton, prefbutton
+    global recorder_ui, brightscale, movescale, zoomscale, presetbutton, flybutton, builder, onoffbutton, prefbutton, res
 
     visca = visca_interface()
 
@@ -122,26 +125,46 @@ def init_visca_ui(element):
 
     # load glade file
     builder = Gtk.Builder()
-    builder.add_from_file(get_ui_path("camctrl-visca.glade"))
+    builder.add_from_file(get_ui_path("camctrl-visca2.glade"))
 
     # add new settings tab to the notebook
     notebook = recorder_ui.get_object("data_panel")
     mainbox = builder.get_object("mainbox")
     label = builder.get_object("notebooklabel")
-    mainbox.show_all()
-    notebook.append_page(mainbox, label)
-    notebook.show_all()
+    #  mainbox.show_all()
 
-    # images
-    upimg = Gtk.Image.new_from_file(get_image_path("img/up.svg"))
-    downimg = Gtk.Image.new_from_file(get_image_path("img/down.svg"))
-    rightimg = Gtk.Image.new_from_file(get_image_path("img/right.svg"))
-    rightupimg = Gtk.Image.new_from_file(get_image_path("img/rightup.svg"))
-    rightdownimg = Gtk.Image.new_from_file(get_image_path("img/rightdown.svg"))
-    leftimg = Gtk.Image.new_from_file(get_image_path("img/left.svg"))
-    leftupimg = Gtk.Image.new_from_file(get_image_path("img/leftup.svg"))
-    leftdownimg = Gtk.Image.new_from_file(get_image_path("img/leftdown.svg"))
-    homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg"))
+    #  leftbox = builder.get_object("leftbox")
+    #  rightbox = builder.get_object("rightbox")
+    notebook.append_page(mainbox, label)
+    #  notebook.append_page(rightbox, label)
+    #  notebook.append_page(rightbox, label)
+
+    window_size = context.get_mainwindow().get_size()
+    res = window_size[0]/1920.0 
+
+    #  size = DEFAULT_ARROW_SIZE
+    size = res*40
+
+    uppix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/up.svg"), size, size)
+    downpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/down.svg"), size, size)
+    rightpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/right.svg"), size, size)
+    rightuppix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/rightup.svg"), size, size)
+    rightdownpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/rightdown.svg"), size, size)
+    leftpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/left.svg"), size, size)
+    leftuppix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/leftup.svg"), size, size)
+    leftdownpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/leftdown.svg"), size, size)
+    homepix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/home.svg"), size, size)
+
+    
+    upimg = Gtk.Image.new_from_pixbuf(uppix)
+    downimg = Gtk.Image.new_from_pixbuf(downpix)
+    rightimg = Gtk.Image.new_from_pixbuf(rightpix)
+    rightdownimg = Gtk.Image.new_from_pixbuf(rightdownpix)
+    rightupimg = Gtk.Image.new_from_pixbuf(rightuppix)
+    leftimg = Gtk.Image.new_from_pixbuf(leftpix)
+    leftupimg = Gtk.Image.new_from_pixbuf(leftuppix)
+    leftdownimg = Gtk.Image.new_from_pixbuf(leftdownpix)
+    homeimg = Gtk.Image.new_from_pixbuf(homepix)
 
     upimg.show()
     downimg.show()
@@ -156,55 +179,57 @@ def init_visca_ui(element):
     # buttons
     # movement
     button = builder.get_object("left")
-    button.add(leftimg)
+    button.add(get_icon("left"))
     button.connect("pressed", visca.move_left)
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("leftup")
-    button.add(leftupimg)
+    button.add(get_icon("leftup"))
     button.connect("pressed", visca.move_leftup)
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("leftdown")
-    button.add(leftdownimg)
+    button.add(get_icon("leftdown"))
     button.connect("pressed", visca.move_leftdown)
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("right")
-    button.add(rightimg)
+    button.add(get_icon("right"))
     button.connect("pressed", visca.move_right)
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("rightup")
-    button.add(rightupimg)
+    button.add(get_icon("rightup"))
     button.connect("pressed", visca.move_rightup)
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("rightdown")
-    button.add(rightdownimg)
+    button.add(get_icon("rightdown"))
     button.connect("pressed", visca.move_rightdown)
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("up")
-    button.add(upimg)
+    button.add(get_icon("up"))
     button.connect("pressed", visca.move_up)
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("down")
-    button.add(downimg)
+    button.add(get_icon("down"))
     button.connect("pressed", visca.move_down)
     button.connect("released", visca.stop_move)
 
     button = builder.get_object("home")
-    button.add(homeimg)
+    button.add(get_icon("home"))
     button.connect("clicked", visca.move_home)
 
     # zoom
     button = builder.get_object("zoomin")
+    button.add(get_stock_icon("zoomin"))
     button.connect("pressed", visca.zoom_in)
     button.connect("released", visca.stop_zoom)
 
     button = builder.get_object("zoomout")
+    button.add(get_stock_icon("zoomout"))
     button.connect("pressed", visca.zoom_out)
     button.connect("released", visca.stop_zoom)
 
@@ -229,9 +254,11 @@ def init_visca_ui(element):
 
     # to set a new preset
     presetbutton = builder.get_object("preset")
+    presetbutton.add(get_stock_icon("preset"))
 
     # fly-mode for camera-movement
     flybutton = builder.get_object("fly")
+    flybutton.add(get_stock_icon("fly"))
     flybutton.connect("clicked", visca.fly_mode)
 
     # on-off button
@@ -240,11 +267,8 @@ def init_visca_ui(element):
 
     # reset all settings
     button = builder.get_object("reset")
+    button.add(get_stock_icon("reset"))
     button.connect("clicked", visca.reset)
-
-    # show/hide preferences
-    prefbutton = builder.get_object("pref")
-    prefbutton.connect("clicked", visca.show_pref)
 
     # scales
     brightscale = builder.get_object("brightscale")
@@ -283,16 +307,17 @@ def init_onvif_ui(element):
     #  mainbox.show_all()
     notebook.append_page(mainbox, label)
 
+    size = DEFAULT_ARROW_SIZE
     # images
-    upimg = Gtk.Image.new_from_file(get_image_path("img/up.svg"))
-    downimg = Gtk.Image.new_from_file(get_image_path("img/down.svg"))
-    rightimg = Gtk.Image.new_from_file(get_image_path("img/right.svg"))
-    rightupimg = Gtk.Image.new_from_file(get_image_path("img/rightup.svg"))
-    rightdownimg = Gtk.Image.new_from_file(get_image_path("img/rightdown.svg"))
-    leftimg = Gtk.Image.new_from_file(get_image_path("img/left.svg"))
-    leftupimg = Gtk.Image.new_from_file(get_image_path("img/leftup.svg"))
-    leftdownimg = Gtk.Image.new_from_file(get_image_path("img/leftdown.svg"))
-    homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg"))
+    upimg = GdkPixbuf.new_from_file_at_size(get_image_path("img/up.svg"), size, size)
+    downimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/down.svg"), size, size)
+    rightimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/right.svg"), size, size)
+    rightupimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/rightup.svg"), size, size)
+    rightdownimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/rightdown.svg"), size, size)
+    leftimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/left.svg"), size, size)
+    leftupimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/leftup.svg"), size, size)
+    leftdownimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/leftdown.svg"), size, size)
+    homeimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/home.svg"), size, size)
 
     notebook.show_all()
     # The new images get not afftected by show_all()
@@ -545,26 +570,6 @@ class visca_interface():
             pysca.set_power_on(DEFAULT_DEVICE, False)
 
 
-    # hides/shows the advanced preferences
-    def show_pref(self, prefbutton):
-        scalebox1 = builder.get_object("scales1")
-        scalebox2 = builder.get_object("scales2")
-        scalebox3 = builder.get_object("scales3")
-        # settings button activated
-        if scalebox1.get_property("visible"):
-            logger.debug("hide advanced settings")
-            scalebox1.hide()
-            scalebox2.hide()
-            scalebox3.hide()
-        # settings button deactivated
-        else:
-            logger.debug("show advanced settings")
-            scalebox1.show()
-            scalebox2.show()
-            scalebox3.show()
-
-
-
     # flymode activation connects clicked signal and disconnects
     # pressed/released to keep the movement
     def fly_mode(self, flybutton):
@@ -604,9 +609,8 @@ class visca_interface():
             button.connect("clicked", self.move_down)
 
             button = builder.get_object("home")
-            img = builder.get_object("stopimg")
             GObject.signal_handlers_destroy(button)
-            button.set_image(img)
+            button.set_image(get_stock_icon("stop"))
             button.connect("clicked", self.stop_move)
 
 
@@ -655,11 +659,8 @@ class visca_interface():
             button.connect("released", self.stop_move)
 
             button = builder.get_object("home")
-            homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg"))
-            homeimg.show()
-            #  img = builder.get_object("homeimg")
             GObject.signal_handlers_destroy(button)
-            button.set_image(homeimg)
+            button.set_image(get_icon("home"))
             button.connect("clicked", self.move_home)
 
 
@@ -884,9 +885,8 @@ class onvif_interface():
             button.connect("clicked", self.move_down)
 
             button = builder.get_object("home")
-            img = builder.get_object("stopimg")
             GObject.signal_handlers_destroy(button)
-            button.set_image(img)
+            button.set_image(get_stock_icon("stop"))
             button.connect("clicked", self.stop_move)
 
         # fly mode turned off
@@ -934,11 +934,9 @@ class onvif_interface():
             button.connect("released", self.stop_move)
 
             button = builder.get_object("home")
-            homeimg = Gtk.Image.new_from_file(get_image_path("img/home.svg"))
-            homeimg.show()
             #  img = builder.get_object("homeimg")
             GObject.signal_handlers_destroy(button)
-            button.set_image(homeimg)
+            button.set_image(get_icon("home"))
             button.connect("clicked", self.move_home)
 
 
@@ -967,3 +965,20 @@ class onvif_interface():
 
         except Exception as e:
             logger.warn("Error accessing the IP camera on recording end. The recording may be incorrect! Error: ", e)
+
+
+def get_icon(imgname):
+    size = res * 70
+    pix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/"+imgname+".svg"), size, size)
+    img = Gtk.Image.new_from_pixbuf(pix)
+    img.show()
+    return img
+
+def get_stock_icon(imgname):
+    size = res * 35
+    if imgname == "stop":
+        size = res * 70
+    img = builder.get_object(imgname+"img")
+    img.set_pixel_size(size)
+    img.show()
+    return img
