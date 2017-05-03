@@ -1,14 +1,14 @@
 /*BOXES*/
 #mainbox{
-    font: sans-serif 12px;
+    /* font: sans-serif 9px; */
     font-weight: lighter;
-    color: black;
+    /* color: black; */
 }
 #leftbox{
     border-radius: 5px;
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
-    border-left: 1px solid lightgrey;
+    /* border-left: 1px solid lightgrey; */
     border-right: 0.5px solid lightgrey;
 }
 #rightbox{
@@ -25,9 +25,9 @@
 #onoffbox{
 }
 #scales{
-    font: sans-serif 8px;
+    /* font: sans-serif 7px; */
     font-weight: lighter;
-    color: black;
+    /* color: black; */
     border-bottom: 1px dashed lightgrey;
 }
 /*rightbox*/
@@ -55,7 +55,7 @@
 	border: 1px solid shade(gray,1.5);
 }
 #presetbuttons{
-    font: sans-serif 10px;
+    /* font: sans-serif 10px; */
     font-weight: lighter;
     color: grey;
     border-radius: 5px;
@@ -63,6 +63,7 @@
 
 }
 #onoffbutton{
+    /* font-size: 9px; */
     border-radius: 5px;
 }
 
@@ -87,9 +88,12 @@
 
 /*LABELS*/
 #descr_label{
-    font-size: 8px;
+    /* font-size: 7px; */
+    font-weight: lighter;
 }
 #title_label{
+    /* font-size: 9px; */
+    font-weight: lighter;
 }
 
 

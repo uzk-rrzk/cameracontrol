@@ -2,7 +2,7 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
+from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Pango
 from galicaster.core import context
 from galicaster.classui import get_ui_path
 from galicaster.classui import get_image_path
@@ -57,9 +57,6 @@ DEFAULT_ZOOMSCALE = 3.5
 DEFAULT_ZOOMSCALE_ONVIF = 0.5
 DEFAULT_MOVESCALE_0NVIF = 0.5
 
-# ARROW SIZE
-DEFAULT_ARROW_SIZE = 20
-
 
 def init():
     global recorder, dispatcher, logger, config, repo
@@ -106,7 +103,7 @@ def init():
 
 # VISCA USER INTERFACE
 def init_visca_ui(element):
-    global recorder_ui, brightscale, movescale, zoomscale, presetbutton, flybutton, builder, onoffbutton, prefbutton, res
+    global recorder_ui, brightscale, movescale, zoomscale, presetbutton, flybutton, builder, onoffbutton, prefbutton, zoomlabel, movelabel, brightlabel, res
 
     visca = visca_interface()
 
@@ -125,56 +122,36 @@ def init_visca_ui(element):
 
     # load glade file
     builder = Gtk.Builder()
-    builder.add_from_file(get_ui_path("camctrl-visca2.glade"))
+    builder.add_from_file(get_ui_path("camctrl-visca.glade"))
+
+    # calculate resolution for scaling
+    window_size = context.get_mainwindow().get_size()
+    res = window_size[0]/1920.0
+
+    # scale images
+    imgs = ["ctrl", "zoom", "bright", "dummy", "settings"]
+    for i in imgs:
+        get_stock_icon(i)
+    # scale label
+    labels = ["control", "settings", "1", "2", "3", "4", "5", "6"]
+    for i in labels:
+        get_label(i)
+
 
     # add new settings tab to the notebook
     notebook = recorder_ui.get_object("data_panel")
     mainbox = builder.get_object("mainbox")
-    label = builder.get_object("notebooklabel")
     #  mainbox.show_all()
 
     #  leftbox = builder.get_object("leftbox")
     #  rightbox = builder.get_object("rightbox")
-    notebook.append_page(mainbox, label)
+    notebook.append_page(mainbox, get_label("notebook"))
     #  notebook.append_page(rightbox, label)
     #  notebook.append_page(rightbox, label)
 
-    window_size = context.get_mainwindow().get_size()
-    res = window_size[0]/1920.0 
 
-    #  size = DEFAULT_ARROW_SIZE
-    size = res*40
 
-    uppix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/up.svg"), size, size)
-    downpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/down.svg"), size, size)
-    rightpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/right.svg"), size, size)
-    rightuppix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/rightup.svg"), size, size)
-    rightdownpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/rightdown.svg"), size, size)
-    leftpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/left.svg"), size, size)
-    leftuppix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/leftup.svg"), size, size)
-    leftdownpix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/leftdown.svg"), size, size)
-    homepix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/home.svg"), size, size)
 
-    
-    upimg = Gtk.Image.new_from_pixbuf(uppix)
-    downimg = Gtk.Image.new_from_pixbuf(downpix)
-    rightimg = Gtk.Image.new_from_pixbuf(rightpix)
-    rightdownimg = Gtk.Image.new_from_pixbuf(rightdownpix)
-    rightupimg = Gtk.Image.new_from_pixbuf(rightuppix)
-    leftimg = Gtk.Image.new_from_pixbuf(leftpix)
-    leftupimg = Gtk.Image.new_from_pixbuf(leftuppix)
-    leftdownimg = Gtk.Image.new_from_pixbuf(leftdownpix)
-    homeimg = Gtk.Image.new_from_pixbuf(homepix)
-
-    upimg.show()
-    downimg.show()
-    rightimg.show()
-    rightupimg.show()
-    rightdownimg.show()
-    leftimg.show()
-    leftupimg.show()
-    leftdownimg.show()
-    homeimg.show()
 
     # buttons
     # movement
@@ -272,9 +249,23 @@ def init_visca_ui(element):
 
     # scales
     brightscale = builder.get_object("brightscale")
+    brightlabel = get_label("bright")
+    brightlabel.set_text(str(int(brightscale.get_value())))
     brightscale.connect("value-changed", visca.set_bright)
+
     movescale = builder.get_object("movescale")
+    movelabel = get_label("move")
+    movelabel.set_text(str(int(movescale.get_value())))
+    movescale.connect("value-changed", visca.set_move)
+
     zoomscale = builder.get_object("zoomscale")
+    zoomlabel = get_label("zoom")
+    zoomlabel.set_text(str(int(zoomscale.get_value())))
+    zoomscale.connect("value-changed", visca.set_zoom)
+
+    # show/hide preferences
+    prefbutton = builder.get_object("pref")
+    prefbutton.connect("clicked", visca.show_pref)
 
 
 # ONVIF USER INTERFACE
@@ -307,7 +298,6 @@ def init_onvif_ui(element):
     #  mainbox.show_all()
     notebook.append_page(mainbox, label)
 
-    size = DEFAULT_ARROW_SIZE
     # images
     upimg = GdkPixbuf.new_from_file_at_size(get_image_path("img/up.svg"), size, size)
     downimg = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/down.svg"), size, size)
@@ -429,42 +419,42 @@ class visca_interface():
     # movement functions
     def move_left(self, button):
         logger.debug("I move left")
-        pysca.pan_tilt(DEFAULT_DEVICE, pan=-movescale.get_value())
+        pysca.pan_tilt(DEFAULT_DEVICE, pan=-int(movescale.get_value()))
 
 
     def move_leftup(self, button):
         logger.debug("I move leftup")
-        pysca.pan_tilt(DEFAULT_DEVICE, pan=-movescale.get_value(), tilt=movescale.get_value())
+        pysca.pan_tilt(DEFAULT_DEVICE, pan=-int(movescale.get_value()), tilt=int(movescale.get_value()))
 
 
     def move_leftdown(self, button):
         logger.debug("I move leftdown")
-        pysca.pan_tilt(DEFAULT_DEVICE, pan=-movescale.get_value(), tilt=-movescale.get_value())
+        pysca.pan_tilt(DEFAULT_DEVICE, pan=-int(movescale.get_value()), tilt=-int(movescale.get_value()))
 
 
     def move_right(self, button):
         logger.debug("I move right")
-        pysca.pan_tilt(DEFAULT_DEVICE, pan=movescale.get_value())
+        pysca.pan_tilt(DEFAULT_DEVICE, pan=int(movescale.get_value()))
 
 
     def move_rightup(self, button):
         logger.debug("I move rightup")
-        pysca.pan_tilt(DEFAULT_DEVICE, pan=movescale.get_value(), tilt=movescale.get_value())
+        pysca.pan_tilt(DEFAULT_DEVICE, pan=int(movescale.get_value()), tilt=int(movescale.get_value()))
 
 
     def move_rightdown(self, button):
         logger.debug("I move rightdown")
-        pysca.pan_tilt(DEFAULT_DEVICE, pan=movescale.get_value(), tilt=-movescale.get_value())
+        pysca.pan_tilt(DEFAULT_DEVICE, pan=int(movescale.get_value()), tilt=-int(movescale.get_value()))
 
 
     def move_up(self, button):
         logger.debug("I move up")
-        pysca.pan_tilt(DEFAULT_DEVICE, tilt=movescale.get_value())
+        pysca.pan_tilt(DEFAULT_DEVICE, tilt=int(movescale.get_value()))
 
 
     def move_down(self, button):
         logger.debug("I move down")
-        pysca.pan_tilt(DEFAULT_DEVICE, tilt=-movescale.get_value())
+        pysca.pan_tilt(DEFAULT_DEVICE, tilt=-int(movescale.get_value()))
 
 
     def stop_move(self, button):
@@ -480,12 +470,12 @@ class visca_interface():
     # zoom functions
     def zoom_in(self, button):
         logger.debug("zoom in")
-        pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_TELE, speed=zoomscale.get_value())
+        pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_TELE, speed=int(zoomscale.get_value()))
 
 
     def zoom_out(self, button):
         logger.debug("zoom out")
-        pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_WIDE, speed=zoomscale.get_value())
+        pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_WIDE, speed=int(zoomscale.get_value()))
 
 
     def stop_zoom(self, button):
@@ -545,8 +535,14 @@ class visca_interface():
     # brightness scale
     def set_bright(self, brightscale):
         pysca.set_ae_mode(DEFAULT_DEVICE, pysca.AUTO_EXPOSURE_BRIGHT_MODE)
-        pysca.set_brightness(DEFAULT_DEVICE, brightscale.get_value() + DEFAULT_BRIGHTNESS)
+        pysca.set_brightness(DEFAULT_DEVICE, int(brightscale.get_value()) + DEFAULT_BRIGHTNESS)
+        brightlabel.set_text(str(int(brightscale.get_value())))
 
+    def set_zoom(self, zoomscale):
+        zoomlabel.set_text(str(int(zoomscale.get_value())))
+
+    def set_move(self, movescale):
+        movelabel.set_text(str(int(movescale.get_value())))
 
     # reset all settings
     def reset(self, button):
@@ -568,6 +564,25 @@ class visca_interface():
             pysca.set_power_on(DEFAULT_DEVICE, True)
         else:
             pysca.set_power_on(DEFAULT_DEVICE, False)
+
+
+    # hides/shows the advanced preferences
+    def show_pref(self, prefbutton):
+        scalebox1 = builder.get_object("scales1")
+        scalebox2 = builder.get_object("scales2")
+        scalebox3 = builder.get_object("scales3")
+        # settings button activated
+        if scalebox1.get_property("visible"):
+            print ("hide advanced settings")
+            scalebox1.hide()
+            scalebox2.hide()
+            scalebox3.hide()
+        # settings button deactivated
+        else:
+            print ("show advanced settings")
+            scalebox1.show()
+            scalebox2.show()
+            scalebox3.show()
 
 
     # flymode activation connects clicked signal and disconnects
@@ -968,17 +983,37 @@ class onvif_interface():
 
 
 def get_icon(imgname):
-    size = res * 70
+    size = res * 56
     pix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/"+imgname+".svg"), size, size)
     img = Gtk.Image.new_from_pixbuf(pix)
     img.show()
     return img
 
 def get_stock_icon(imgname):
-    size = res * 35
+    size = res * 28
     if imgname == "stop":
-        size = res * 70
+        size = res * 56
     img = builder.get_object(imgname+"img")
     img.set_pixel_size(size)
     img.show()
     return img
+
+def get_label(labelname):
+    label = builder.get_object(labelname+"_label")
+    size = res * 18
+    if labelname == "settings" \
+       or labelname == "control":
+        size = res * 20
+    elif labelname == "notebook":
+        size = res * 20
+        label.set_property("ypad",10)
+        #  label.set_property("xpad",5)
+        #  label.set_property("vexpand-set",True)
+        #  label.set_property("vexpand",True)
+    elif labelname == "bright" or \
+            labelname == "move" or \
+            labelname == "zoom":
+        size = res * 14
+    label.set_use_markup(True)
+    label.modify_font(Pango.FontDescription(str(size)))
+    return label
