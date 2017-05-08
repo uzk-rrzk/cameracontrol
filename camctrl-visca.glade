@@ -360,7 +360,6 @@
               <object class="GtkBox" id="scalebox1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="valign">center</property>
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
@@ -649,7 +648,7 @@
                 <property name="name">control</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
+                <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="column_homogeneous">True</property>
                 <child>
