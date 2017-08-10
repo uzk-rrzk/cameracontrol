@@ -24,7 +24,7 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
 * Copy all relevant files to your Galicaster install like below:
 
         :::sh
-        cp -r img/ $GALICASTER/resources/images/.
+        cp -r camctrl-images/ $GALICASTER/resources/images/.
         cp camctrl.py $GALICASTER/galicaster/plugins/.
         cp camctrl.css $GALICASTER/resources/ui/.
         cp camctrl-visca.glade $GALICASTER/resources/ui/.

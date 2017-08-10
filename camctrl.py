@@ -1,7 +1,7 @@
 """Copyright (C) 2017  Robin Lachmann
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
+it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
@@ -1002,7 +1002,7 @@ class onvif_interface():
 
 def get_icon(imgname):
     size = res * 56
-    pix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("img/"+imgname+".svg"), size, size)
+    pix = GdkPixbuf.Pixbuf.new_from_file_at_size(get_image_path("camctrl-images/"+imgname+".svg"), size, size)
     img = Gtk.Image.new_from_pixbuf(pix)
     img.show()
     return img
