@@ -1,14 +1,31 @@
+/* Copyright (C) 2017  Robin Lachmann
+
+This file is part of the camctrl plugin for Galicaster.
+
+The camctrl plugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+The camctrl plugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. */
+
 /*BOXES*/
 #mainbox{
-    font: sans-serif 12px;
+    /* font: sans-serif 9px; */
     font-weight: lighter;
-    color: black;
+    /* color: black; */
 }
 #leftbox{
     border-radius: 5px;
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
-    border-left: 1px solid lightgrey;
+    /* border-left: 1px solid lightgrey; */
     border-right: 0.5px solid lightgrey;
 }
 #rightbox{
@@ -19,21 +36,21 @@
     border-right: 1px solid lightgrey;
 }
 #title_box{
-    border-bottom: 1px solid lightgrey;
+    /* border-bottom: 1px solid lightgrey; */
 }
 /*leftbox*/
 #onoffbox{
 }
 #scales{
-    font: sans-serif 8px;
+    /* font: sans-serif 7px; */
     font-weight: lighter;
-    color: black;
+    /* color: black; */
     border-bottom: 1px dashed lightgrey;
 }
 /*rightbox*/
 #controlpanel{
-    border: 1px dashed lightgrey;
-    border-radius: 5px;
+    /* border: 1px dashed lightgrey; */
+    /* border-radius: 5px; */
 }
 #control{
     border: 2px dotted lightgrey;
@@ -55,7 +72,7 @@
 	border: 1px solid shade(gray,1.5);
 }
 #presetbuttons{
-    font: sans-serif 10px;
+    /* font: sans-serif 10px; */
     font-weight: lighter;
     color: grey;
     border-radius: 5px;
@@ -63,6 +80,7 @@
 
 }
 #onoffbutton{
+    /* font-size: 9px; */
     border-radius: 5px;
 }
 
@@ -87,9 +105,12 @@
 
 /*LABELS*/
 #descr_label{
-    font-size: 8px;
+    /* font-size: 7px; */
+    font-weight: lighter;
 }
 #title_label{
+    /* font-size: 9px; */
+    font-weight: lighter;
 }
 
 

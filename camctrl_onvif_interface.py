@@ -1,10 +1,26 @@
+"""Copyright (C) 2017  Robin Lachmann
+
+This file is part of the camctrl plugin for Galicaster.
+
+The camctrl plugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+The camctrl plugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>."""
+
+
 from onvif import ONVIFCamera
 import os
 
 # for use with Galicaster only
 from galicaster.core import context
-# TODO remove prints
-# TODO split identify_presets in two
 
 '''
 If getting bad request while connecting, check cameras date and time 

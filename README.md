@@ -18,13 +18,13 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
 * Clone the git repository to a desired location on your machine:
 
         :::sh
-        git clone https://bitbucket.org/svnset/cameracontrol.git
+        git clone https://bitbucket.org/uni-koeln/cameracontrol.git
         cd cameracontrol
 
 * Copy all relevant files to your Galicaster install like below:
 
         :::sh
-        cp -r img/ $GALICASTER/resources/images/.
+        cp -r camctrl-images/ $GALICASTER/resources/images/.
         cp camctrl.py $GALICASTER/galicaster/plugins/.
         cp camctrl.css $GALICASTER/resources/ui/.
         cp camctrl-visca.glade $GALICASTER/resources/ui/.
@@ -54,21 +54,27 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
         backend = visca
         port = /dev/ttyS0
 
+* To use the ONVIF backend, it is important that we also define the credentials to connect to the SOAP-Service. Port is optional, if none set it will default to 80. (IMPORTANT: Galicaster will freeze if you set the wrong port, you will get no feedback or error message due to an internal bug in the python-onvif implementation. So make sure the port you provide is not blocked.)
+
+        [camctrl]
+        ip = <yourcameraip>
+        username = <yourusername>
+        password = <yourpass> 
+        port = 80
+
 ## Plugin Features ##
 ### camctrl-visca ###
-* Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (0-5) and the plugin will start recording from it.
 * You can configure the plugin to call a certain preset before recording (`record-preset`) and also after finishing a recording (`idle-preset`). Presets go from 0 to 5, which correspond to the presets 1-6 defined by VISCA. A sample configuration in Galicaster's `conf.ini` file is:
 
         [camctrl]
         backend = visca
-        port = /dev/ttyS0
+        serial-port = /dev/ttyS0
         record-preset = 0
         idle-preset = 5
 
 ### camctrl-onvif ###
 * Infinite number of presets with full names like "record", "idle", "desk", etc. 
     * Preset names may consist of alphanumerical characters only. Punctuation characters (like "-" or ".") and non-English characters (like "ä", "é" or "ñ") are not yet allowed.
-* Workflow integration: If you schedule a recording, you are now able to set a desired starting preset (only normal characters for now, no äöü-_. etc.)
 * You can configure the plugin to call a certain preset before recording (`record-preset`) and also after finishing a recording (`idle-preset`). For instance:
 
         [camctrl]

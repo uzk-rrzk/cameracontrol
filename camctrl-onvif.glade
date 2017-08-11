@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.18.3 -->
+
+<!-- Copyright (C) 2017  Robin Lachmann
+
+This file is part of the camctrl plugin for Galicaster.
+
+The camctrl plugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+The camctrl plugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
+
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkImage" id="downimg">
@@ -17,6 +35,7 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">airplane-mode-symbolic</property>
+    <property name="icon_size">1</property>
   </object>
   <object class="GtkImage" id="homeimg">
     <property name="visible">True</property>
@@ -36,7 +55,7 @@
     <property name="step_increment">0.10000000000000001</property>
     <property name="page_increment">1</property>
   </object>
-  <object class="GtkLabel" id="notebooklabel">
+  <object class="GtkLabel" id="notebook_label">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="ypad">12</property>
@@ -51,7 +70,7 @@
   <object class="GtkImage" id="resetimg">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="stock">gtk-goto-first</property>
+    <property name="icon_name">gtk-goto-first</property>
   </object>
   <object class="GtkImage" id="rightimg">
     <property name="visible">True</property>
@@ -68,7 +87,7 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="tooltip_text" translatable="yes">Stop movement.</property>
-    <property name="stock">gtk-media-stop</property>
+    <property name="icon_name">gtk-media-stop</property>
     <property name="icon_size">5</property>
   </object>
   <object class="GtkImage" id="upimg">
@@ -83,37 +102,32 @@
     <property name="step_increment">0.10000000000000001</property>
     <property name="page_increment">1</property>
   </object>
-  <object class="GtkImage" id="zoominimg">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-add</property>
-  </object>
-  <object class="GtkImage" id="zoomoutimg">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-remove</property>
-  </object>
   <object class="GtkBox" id="mainbox">
     <property name="name">mainbox</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="homogeneous">True</property>
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
     <child>
       <object class="GtkBox" id="leftbox">
         <property name="name">leftbox</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
+        <property name="baseline_position">top</property>
         <child>
           <object class="GtkBox" id="settingsbox">
             <property name="name">title_box</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="margin_top">5</property>
-            <property name="margin_bottom">15</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">4</property>
+            <property name="margin_bottom">5</property>
+            <property name="hexpand">True</property>
             <child>
               <object class="GtkButton" id="pref">
                 <property name="name">titlebutton</property>
@@ -121,9 +135,12 @@
                 <property name="can_focus">False</property>
                 <property name="receives_default">False</property>
                 <property name="tooltip_text" translatable="yes">Hide/show scale bars.</property>
-                <property name="margin_bottom">5</property>
-                <property name="image">settingsimg</property>
+                <property name="margin_right">5</property>
+                <property name="relief">none</property>
                 <property name="always_show_image">True</property>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -132,13 +149,12 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label_settings">
+              <object class="GtkLabel" id="settings_label">
                 <property name="name">title_label</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_bottom">5</property>
-                <property name="xpad">10</property>
                 <property name="label" translatable="yes">Settings</property>
+                <property name="use_markup">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -158,24 +174,26 @@
             <property name="name">presets</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="halign">start</property>
+            <property name="halign">center</property>
             <property name="valign">center</property>
-            <property name="margin_left">60</property>
-            <property name="margin_bottom">15</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">5</property>
+            <property name="margin_bottom">5</property>
             <property name="orientation">vertical</property>
-            <property name="spacing">10</property>
+            <property name="spacing">5</property>
             <child>
               <object class="GtkBox" id="preset_delete">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="valign">center</property>
                 <property name="spacing">5</property>
                 <child>
                   <object class="GtkComboBoxText" id="preset_list">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">List all saved presets.</property>
-                    <property name="halign">start</property>
-                    <property name="valign">start</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
                     <property name="button_sensitivity">on</property>
                     <property name="popup_fixed_width">False</property>
                   </object>
@@ -192,27 +210,15 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="tooltip_text" translatable="yes">Activate delete mode. Select desired preset to delete.</property>
-                    <property name="halign">start</property>
-                    <property name="valign">start</property>
-                    <property name="image">presetdelimg</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label_presetdel">
-                    <property name="name">descr_label</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Delete preset</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>
@@ -223,42 +229,19 @@
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="preset_save">
+              <object class="GtkEntry" id="newpreset">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkEntry" id="newpreset">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">Save the current position to a new preset. Press Enter or click on icon to save.</property>
-                    <property name="primary_icon_name">window-new</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label_preset">
-                    <property name="name">descr_label</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="xpad">6</property>
-                    <property name="label" translatable="yes">Save preset.</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
+                <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">Save the current position to a new preset. Press Enter or click on icon to save.</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="width_chars">15</property>
+                <property name="primary_icon_name">window-new</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
@@ -273,15 +256,31 @@
             <property name="name">scales</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">60</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">5</property>
             <property name="margin_bottom">5</property>
-            <property name="spacing">13</property>
-            <property name="homogeneous">True</property>
+            <property name="spacing">5</property>
+            <child>
+              <object class="GtkLabel" id="move_label">
+                <property name="name">descr_label</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">0</property>
+                <property name="use_markup">True</property>
+                <property name="angle">0.02</property>
+                <property name="xalign">0</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkBox" id="scalebox1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">4</property>
+                <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScale" id="movescale">
@@ -290,6 +289,7 @@
                     <property name="tooltip_text" translatable="yes">Scale control speed.</property>
                     <property name="adjustment">moveadjustment</property>
                     <property name="round_digits">1</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">left</property>
                   </object>
                   <packing>
@@ -302,21 +302,20 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label_movespeed">
-                <property name="name">descr_label</property>
+              <object class="GtkImage" id="ctrlimg">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Control</property>
-                <property name="xalign">0</property>
+                <property name="icon_name">zoom-fit-best-symbolic</property>
+                <property name="icon_size">1</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -331,15 +330,31 @@
             <property name="name">scales</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">60</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">5</property>
             <property name="margin_bottom">5</property>
-            <property name="spacing">13</property>
-            <property name="homogeneous">True</property>
+            <property name="spacing">5</property>
+            <child>
+              <object class="GtkLabel" id="zoom_label">
+                <property name="name">descr_label</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">start</property>
+                <property name="label" translatable="yes">0</property>
+                <property name="use_markup">True</property>
+                <property name="xalign">0</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkBox" id="scalebox2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">4</property>
+                <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScale" id="zoomscale">
@@ -348,6 +363,7 @@
                     <property name="tooltip_text" translatable="yes">Scale zoom speed.</property>
                     <property name="adjustment">zoomadjustment</property>
                     <property name="round_digits">1</property>
+                    <property name="draw_value">False</property>
                     <property name="value_pos">left</property>
                   </object>
                   <packing>
@@ -360,22 +376,20 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label_zoomspeed">
-                <property name="name">descr_label</property>
+              <object class="GtkImage" id="zoomimg">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="label" translatable="yes">Zoom</property>
-                <property name="xalign">0</property>
+                <property name="icon_name">zoom-best-fit</property>
+                <property name="icon_size">1</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -397,24 +411,30 @@
         <property name="name">rightbox</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">20</property>
+        <property name="spacing">5</property>
+        <property name="baseline_position">top</property>
         <child>
           <object class="GtkBox" id="controlbox">
             <property name="name">title_box</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="margin_top">5</property>
+            <property name="margin_left">10</property>
+            <property name="margin_top">4</property>
+            <property name="margin_bottom">5</property>
+            <property name="hexpand">True</property>
             <child>
               <object class="GtkButton" id="dummy">
                 <property name="name">titlebutton</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="receives_default">False</property>
-                <property name="margin_bottom">5</property>
+                <property name="margin_right">5</property>
                 <property name="image">dummyimg</property>
+                <property name="xalign">0.51999998092651367</property>
+                <property name="yalign">0.51999998092651367</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -423,13 +443,12 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="label_control">
+              <object class="GtkLabel" id="control_label">
                 <property name="name">title_label</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_bottom">5</property>
-                <property name="xpad">10</property>
                 <property name="label" translatable="yes">Control</property>
+                <property name="use_markup">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -448,166 +467,10 @@
           <object class="GtkBox" id="ctrl">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <child>
-              <object class="GtkGrid" id="ctrlpanel">
-                <property name="name">controlpanel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="valign">start</property>
-                <property name="margin_left">40</property>
-                <property name="margin_right">20</property>
-                <property name="row_spacing">2</property>
-                <child>
-                  <object class="GtkBox" id="zoom">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="hexpand">False</property>
-                    <property name="vexpand">False</property>
-                    <property name="spacing">2</property>
-                    <child>
-                      <object class="GtkButton" id="zoomin">
-                        <property name="name">panelbuttons</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="tooltip_text" translatable="yes">Zoom in.</property>
-                        <property name="hexpand">False</property>
-                        <property name="vexpand">False</property>
-                        <property name="image">zoominimg</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="zoomout">
-                        <property name="name">panelbuttons</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="tooltip_text" translatable="yes">Zoom out.</property>
-                        <property name="hexpand">False</property>
-                        <property name="vexpand">False</property>
-                        <property name="image">zoomoutimg</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label_zoom">
-                    <property name="name">descr_label</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="label" translatable="yes">Zoom</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label_fly">
-                    <property name="name">descr_label</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="label" translatable="yes">Fly mode</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="fly">
-                    <property name="name">panelbuttons</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip_text" translatable="yes">Activate the fly mode.</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="hexpand">False</property>
-                    <property name="vexpand">False</property>
-                    <property name="image">flyimg</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label_reset">
-                    <property name="name">descr_label</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="label" translatable="yes">Reset</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="reset">
-                    <property name="name">panelbuttons</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip_text" translatable="yes">Reset all settings to default.</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_bottom">5</property>
-                    <property name="hexpand">False</property>
-                    <property name="vexpand">False</property>
-                    <property name="image">resetimg</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">5</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
+            <property name="halign">center</property>
+            <property name="margin_left">10</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">5</property>
             <child>
               <object class="GtkGrid" id="ctrlfield">
                 <property name="name">control</property>
@@ -615,10 +478,6 @@
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
-                <property name="margin_right">40</property>
-                <property name="margin_bottom">5</property>
-                <property name="row_spacing">2</property>
-                <property name="column_spacing">2</property>
                 <property name="column_homogeneous">True</property>
                 <child>
                   <object class="GtkButton" id="home">
@@ -629,7 +488,9 @@
                     <property name="tooltip_text" translatable="yes">Return to home.</property>
                     <property name="hexpand">False</property>
                     <property name="vexpand">False</property>
-                    <property name="image">homeimg</property>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -784,6 +645,107 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="ctrlpanel">
+                <property name="name">controlpanel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_right">5</property>
+                <property name="margin_bottom">5</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkBox" id="zoom">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="spacing">2</property>
+                    <child>
+                      <object class="GtkButton" id="zoomin">
+                        <property name="name">panelbuttons</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Zoom in.</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="zoomout">
+                        <property name="name">panelbuttons</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Zoom out.</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="fly">
+                    <property name="name">panelbuttons</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Activate the fly mode.</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="reset">
+                    <property name="name">panelbuttons</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Reset all settings to default.</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -801,5 +763,15 @@
         <property name="position">1</property>
       </packing>
     </child>
+  </object>
+  <object class="GtkImage" id="zoominimg">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">gtk-add</property>
+  </object>
+  <object class="GtkImage" id="zoomoutimg">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">gtk-remove</property>
   </object>
 </interface>
