@@ -220,7 +220,7 @@ def init_visca_ui(element):
 
 # ONVIF USER INTERFACE
 def init_onvif_ui(element):
-    global recorder_ui, builder, res
+    global recorder_ui, builder
     
     # init function classes
     onvif = onvif_interface()
@@ -245,10 +245,6 @@ def init_onvif_ui(element):
     # load glade file
     builder = Gtk.Builder()
     builder.add_from_file(get_ui_path("camctrl-onvif.glade"))
-
-    # calculate resolution for scaling
-    window_size = context.get_mainwindow().get_size()
-    res = window_size[0]/1920.0
 
     # scaling of images/labels which do not get called at all
     # scale images
