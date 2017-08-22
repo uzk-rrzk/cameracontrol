@@ -144,11 +144,9 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
                 <property name="receives_default">False</property>
                 <property name="tooltip_text" translatable="yes">Hide/show scale bars.</property>
                 <property name="margin_right">5</property>
+                <property name="image">settingsimg</property>
                 <property name="relief">none</property>
                 <property name="always_show_image">True</property>
-                <child>
-                  <placeholder/>
-                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -264,8 +262,9 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
             <property name="name">scales</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="valign">center</property>
             <property name="margin_left">10</property>
-            <property name="margin_right">5</property>
+            <property name="margin_right">10</property>
             <property name="margin_bottom">5</property>
             <property name="spacing">5</property>
             <child>
@@ -338,8 +337,9 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
             <property name="name">scales</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="valign">center</property>
             <property name="margin_left">10</property>
-            <property name="margin_right">5</property>
+            <property name="margin_right">10</property>
             <property name="margin_bottom">5</property>
             <property name="spacing">5</property>
             <child>

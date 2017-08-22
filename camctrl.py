@@ -271,7 +271,7 @@ def init_onvif_ui(element):
     # presets
     # note: preset objects have to be initialized individually
     # preset list
-    presetlist = builder.get_object("presetlist")
+    presetlist = builder.get_object("preset_list")
     # add home position to list
     presetlist.insert(0, "home", "home")
     # fill the list with current presets
@@ -324,9 +324,9 @@ def init_onvif_ui(element):
         button = builder.get_object(i)
         if i == "home":
             button.add(utils.get_icon(i))
-            button.connect("clicked", utils.str_to_module("onvif_interface", "move_" + i))
+            button.connect("clicked", utils.str_to_module("onvif_interface", "move_" + i), presetlist)
         elif i == "show_pref":
-            button.connect("clicked", utils.str_to_module("visca_interface", i))
+            button.connect("clicked", utils.str_to_module("onvif_interface", i))
         else:
             button.add(utils.get_stock_icon(i))
             button.connect("clicked", utils.str_to_module("onvif_interface", i))
@@ -687,7 +687,7 @@ class onvif_interface():
                     button.set_image(utilities().get_stock_icon("stop"))
                     button.connect("clicked", self.stop_move)
                 else:
-                    button.connect("clicked", utilities().str_to_module("onvif_interface", "move_" + i), scale. presetlist)
+                    button.connect("clicked", utilities().str_to_module("onvif_interface", "move_" + i), scale, presetlist)
 
         # fly mode turned off
         else:
