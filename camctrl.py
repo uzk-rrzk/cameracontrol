@@ -1027,9 +1027,9 @@ def get_label(labelname):
     elif labelname == "notebook":
         size = res * 20
         label.set_property("ypad",10)
-        #  label.set_property("xpad",5)
-        #  label.set_property("vexpand-set",True)
-        #  label.set_property("vexpand",True)
+        label.set_property("xpad",5)
+        label.set_property("vexpand-set",True)
+        label.set_property("vexpand",True)
     elif labelname == "bright" or \
             labelname == "move" or \
             labelname == "zoom":
