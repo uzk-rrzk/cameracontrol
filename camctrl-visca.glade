@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.18.3 -->
-
 <!-- Copyright (C) 2017  Robin Lachmann
 
 This file is part of the camctrl plugin for Galicaster.
@@ -17,7 +16,6 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
-
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkAdjustment" id="brightadjustment">
@@ -38,7 +36,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
     <property name="icon_name">camera-web-symbolic</property>
     <property name="icon_size">1</property>
   </object>
-  <object class="GtkImage" id="flyimg">
+  <object class="GtkImage" id="fly_modeimg">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">airplane-mode-symbolic</property>
@@ -108,6 +106,18 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
     <property name="stock">gtk-go-up</property>
     <property name="icon_size">1</property>
   </object>
+  <object class="GtkImage" id="zoom_inimg">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">add</property>
+    <property name="icon_size">1</property>
+  </object>
+  <object class="GtkImage" id="zoom_outimg">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">remove</property>
+    <property name="icon_size">1</property>
+  </object>
   <object class="GtkAdjustment" id="zoomadjustment">
     <property name="upper">7</property>
     <property name="value">3.5</property>
@@ -141,7 +151,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
             <property name="margin_bottom">5</property>
             <property name="hexpand">True</property>
             <child>
-              <object class="GtkButton" id="pref">
+              <object class="GtkButton" id="show_pref">
                 <property name="name">titlebutton</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -631,18 +641,63 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
               </packing>
             </child>
             <child>
-              <object class="GtkSwitch" id="on-off">
-                <property name="name">onoffbutton</property>
+              <object class="GtkBox" id="onoffbox">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">Turn the camera On/Off.</property>
+                <property name="can_focus">False</property>
                 <property name="halign">start</property>
                 <property name="valign">center</property>
                 <property name="margin_left">10</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkButton" id="on">
+                    <property name="name">onoffbutton</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="halign">start</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkLabel" id="on_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">ON</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="off">
+                    <property name="name">onoffbutton</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="halign">start</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkLabel" id="off_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">OFF</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -834,7 +889,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
                     <property name="valign">center</property>
                     <property name="spacing">2</property>
                     <child>
-                      <object class="GtkButton" id="zoomin">
+                      <object class="GtkButton" id="zoom_in">
                         <property name="name">panelbuttons</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -851,7 +906,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="zoomout">
+                      <object class="GtkButton" id="zoom_out">
                         <property name="name">panelbuttons</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -875,7 +930,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToggleButton" id="fly">
+                  <object class="GtkToggleButton" id="fly_mode">
                     <property name="name">panelbuttons</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -933,17 +988,5 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
         <property name="position">1</property>
       </packing>
     </child>
-  </object>
-  <object class="GtkImage" id="zoominimg">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">add</property>
-    <property name="icon_size">1</property>
-  </object>
-  <object class="GtkImage" id="zoomoutimg">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">remove</property>
-    <property name="icon_size">1</property>
   </object>
 </interface>

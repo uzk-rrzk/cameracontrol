@@ -60,7 +60,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. */
 /*BUTTONS*/
 #titlebutton{
     border-radius: 5px;
-	border: 1px solid shade(gray,1.5);
+    border: 1px solid shade(gray,1.5);
 }
 #controlbuttons{
     border: 0;
@@ -69,19 +69,21 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. */
 }
 #panelbuttons{
     border-radius: 5px;
-	border: 1px solid shade(gray,1.5);
+    border: 1px solid shade(gray,1.5);
 }
 #presetbuttons{
     /* font: sans-serif 10px; */
     font-weight: lighter;
     color: grey;
     border-radius: 5px;
-	border: 1px solid shade(gray,1.5);
+    border: 1px solid shade(gray,1.5);
 
 }
 #onoffbutton{
     /* font-size: 9px; */
+    color: grey;
     border-radius: 5px;
+    border: 1px solid shade(gray,1.5);
 }
 
 /*BUTTONEFFECTS*/
@@ -89,6 +91,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. */
     background: repeating-linear-gradient(ghostwhite, lightsalmon)
 }
 #onoffbutton:hover{
+    background: repeating-linear-gradient(ghostwhite,lightsalmon)
 }
 #controlbuttons:hover{
     background: repeating-linear-gradient(ghostwhite,lightsalmon)
