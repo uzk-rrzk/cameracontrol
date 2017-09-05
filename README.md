@@ -24,14 +24,19 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
 * Copy all relevant files to your Galicaster install like below:
 
         :::sh
-        cp -r camctrl-images/ $GALICASTER/resources/images/.
         cp camctrl.py $GALICASTER/galicaster/plugins/.
         cp camctrl.css $GALICASTER/resources/ui/.
         cp camctrl-visca.glade $GALICASTER/resources/ui/.
         cp camctrl-onvif.glade $GALICASTER/resources/ui/.
         cp camctrl_onvif_interface.py $GALICASTER/galicaster/utils/.
 
+* Also copy the "camctrl-images" folder into your Galicaster "images" folder like below:
+
+        :::sh
+        cp -r camctrl-images/ $GALICASTER/resources/images/.
+
     , where `$GALICASTER` represents the location Galicaster within the system. If you used the official packages, that should be in `/usr/share/galicaster`
+
 
 * Edit your `conf.ini` file (`/etc/galicaster/conf.ini` if installed from the official .deb package) to activate the plugin:
 
@@ -71,6 +76,13 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
         serial-port = /dev/ttyS0
         record-preset = 0
         idle-preset = 5
+
+* It is also possible to determine which presets should be modifiable and which not. The following example sets presets from 1-4 modifiable:
+        
+        [camctrl]
+        backend = visca
+        serial-port = /dev/ttyS0
+        mod-presets = 1,2,3,4
 
 ### camctrl-onvif ###
 * Infinite number of presets with full names like "record", "idle", "desk", etc. 

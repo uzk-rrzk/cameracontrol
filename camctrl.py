@@ -30,6 +30,9 @@ from galicaster.classui import get_image_path
 # This is the default Visca device this plugin talks to
 DEFAULT_DEVICE = 1
 
+# This is the key defining modifiable presets
+MOD_PRESETS_KEY = "mod-presets"
+
 # This is the default preset to set when the camera is recording
 DEFAULT_RECORD_PRESET = "record"
 DEFAULT_RECORD_PRESET_INT = 0
@@ -42,7 +45,7 @@ DEFAULT_IDLE_PRESET_INT = 5
 RECORD_PRESET_KEY = 'record-preset'
 
 # This is the key containing the preset to set the camera to just after switching it off
-IDLE_PRESET_KEY= 'idle-preset'
+IDLE_PRESET_KEY = 'idle-preset'
 
 # This is the key containing the port (path to the device) to use when recording
 PORT_KEY = "serial-port"
@@ -88,15 +91,8 @@ def init():
         global cam
         import galicaster.utils.camctrl_onvif_interface as camera
         # connect to the camera
-        ip = config.get(IPADDRESS)
-        username = config.get(USERNAME)
-        password = config.get(PASSWORD)
-        if config.get(PORT) is None:
-            port = DEFAULT_PORT
-        else:
-            port = config.get(PORT)
         cam = camera.AXIS_V5915()
-        cam.connect(ip, port, username, password)
+        cam.connect(config.get(IPADDRESS), config.get(PORT, DEFAULT_PORT), config.get(USERNAME), config.get(PASSWORD))
         # initiate the onvif user interface
         dispatcher.connect("init", init_onvif_ui)
 
@@ -166,9 +162,9 @@ def init_visca_ui(element):
     # preset buttons
     presetbutton = builder.get_object("preset")
     presetbutton.add(get_stock_icon("preset"))
-    for i in [ str(x) for x in range(1,7)]:
-        button = builder.get_object(i)
-        button.connect("clicked", str_to_module("visca_interface", "preset" + i), presetbutton)
+    for i in range(6):
+        button = builder.get_object(str(i+1))
+        button.connect("clicked", str_to_module("visca_interface", "set_preset"), presetbutton, i)
 
     # scales and movement/zoom buttons
     for i in scales:
@@ -385,47 +381,14 @@ class visca_interface():
         pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_STOP)
 
     # preset functions
-    def preset1(self, button, presetbutton):
+    def set_preset(self, button, presetbutton, i):
         if presetbutton.get_active():
-            pysca.set_memory(DEFAULT_DEVICE, 0)
+            modpresets = config.get(MOD_PRESETS_KEY)
+            if (modpresets is None) or (str(i) in modpresets):
+                pysca.set_memory(DEFAULT_DEVICE, i)
             presetbutton.set_active(False)
         else:
-            pysca.recall_memory(DEFAULT_DEVICE, 0)
-
-    def preset2(self, button, presetbutton):
-        if presetbutton.get_active():
-            pysca.set_memory(DEFAULT_DEVICE, 1)
-            presetbutton.set_active(False)
-        else:
-            pysca.recall_memory(DEFAULT_DEVICE, 1)
-
-    def preset3(self, button, presetbutton):
-        if presetbutton.get_active():
-            pysca.set_memory(DEFAULT_DEVICE, 2)
-            presetbutton.set_active(False)
-        else:
-            pysca.recall_memory(DEFAULT_DEVICE, 2)
-
-    def preset4(self, button, presetbutton):
-        if presetbutton.get_active():
-            pysca.set_memory(DEFAULT_DEVICE, 3)
-            presetbutton.set_active(False)
-        else:
-            pysca.recall_memory(DEFAULT_DEVICE, 3)
-
-    def preset5(self, button, presetbutton):
-        if presetbutton.get_active():
-            pysca.set_memory(DEFAULT_DEVICE, 4)
-            presetbutton.set_active(False)
-        else:
-            pysca.recall_memory(DEFAULT_DEVICE, 4)
-
-    def preset6(self, button, presetbutton):
-        if presetbutton.get_active():
-            pysca.set_memory(DEFAULT_DEVICE, 5)
-            presetbutton.set_active(False)
-        else:
-            pysca.recall_memory(DEFAULT_DEVICE, 5)
+            pysca.recall_memory(DEFAULT_DEVICE, i)
 
     # brightness scale
     def set_bright(self, scale, scalelabel):
