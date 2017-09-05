@@ -30,8 +30,8 @@ from galicaster.classui import get_image_path
 # This is the default Visca device this plugin talks to
 DEFAULT_DEVICE = 1
 
-# This is the key defining modifiable presets
-MOD_PRESETS_KEY = "mod-presets"
+# This is the key defining non-modifiable presets
+NOMOD_PRESETS_KEY = "nomod-presets"
 
 # This is the default preset to set when the camera is recording
 DEFAULT_RECORD_PRESET = "record"
@@ -276,11 +276,14 @@ def init_onvif_ui(element):
     # to delete a preset
     presetdelbutton = builder.get_object("presetdel")
     presetdelbutton.add(get_stock_icon("presetdel"))
+    
+    # non-modifiable presets 
+    nomodpresets = config.get(NOMOD_PRESETS_KEY)
 
     # connect preset functions
-    presetlist.connect("changed", onvif.change_preset, newpreset, presetdelbutton)
-    newpreset.connect("activate", onvif.save_preset, presetlist)
-    newpreset.connect("icon-press", onvif.save_preset_icon, presetlist)
+    presetlist.connect("changed", onvif.change_preset, newpreset, presetdelbutton, nomodpresets)
+    newpreset.connect("activate", onvif.save_preset, presetlist, nomodpresets)
+    newpreset.connect("icon-press", onvif.save_preset_icon, presetlist, nomodpresets)
     presetdelbutton.connect("clicked", onvif.empty_entry, presetlist)
 
     # scales and movement/zoom buttons
@@ -383,8 +386,8 @@ class visca_interface():
     # preset functions
     def set_preset(self, button, presetbutton, i):
         if presetbutton.get_active():
-            modpresets = config.get(MOD_PRESETS_KEY)
-            if (modpresets is None) or (str(i) in modpresets):
+            nomodpresets = config.get(NOMOD_PRESETS_KEY)
+            if (nomodpresets is None) or (str(i) not in nomodpresets):
                 pysca.set_memory(DEFAULT_DEVICE, i)
             presetbutton.set_active(False)
         else:
@@ -558,7 +561,7 @@ class onvif_interface():
         presetlist.set_active(-1)
 
     # preset functions
-    def change_preset(self, presetlist, newpreset, presetdelbutton):
+    def change_preset(self, presetlist, newpreset, presetdelbutton, nomodpresets):
         if len(newpreset.get_text()) > 0:
             if newpreset.get_text() == "home":
                 logger.debug("New Home set to current position.")
@@ -569,9 +572,10 @@ class onvif_interface():
             cam.go_home()
         else:
             if presetdelbutton.get_active() and not presetlist.get_active_text() is None:
-                cam.remove_preset(cam.identify_preset(presetlist.get_active_text()))
+                if presetlist.get_active_text() not in nomodpresets:
+                    cam.remove_preset(cam.identify_preset(presetlist.get_active_text()))
+                    presetlist.remove(presetlist.get_active())
                 presetdelbutton.set_active(False)
-                presetlist.remove(presetlist.get_active())
                 
             else:
                 if not presetlist.get_active_text() is None:
@@ -585,27 +589,29 @@ class onvif_interface():
         elif not presetdelbutton.get_active():
             presetlist.insert(0, "home", "home")
 
-    def save_preset_icon(self, newpreset, pos, event, presetlist):
-        if newpreset.get_text() == "home":
-            cam.set_home()
-            presetlist.set_active_id(newpreset.get_text())
-            newpreset.set_text("")
-        else:
-            cam.set_preset(newpreset.get_text())
-            presetlist.append(newpreset.get_text(), newpreset.get_text())
-            presetlist.set_active_id(newpreset.get_text())
-            newpreset.set_text("")
+    def save_preset_icon(self, newpreset, pos, event, presetlist, nomodpresets):
+        if newpreset.get_text() not in nomodpresets:
+            if newpreset.get_text() == "home": 
+                cam.set_home()
+                presetlist.set_active_id(newpreset.get_text())
+                newpreset.set_text("")
+            else:
+                cam.set_preset(newpreset.get_text())
+                presetlist.append(newpreset.get_text(), newpreset.get_text())
+                presetlist.set_active_id(newpreset.get_text())
+                newpreset.set_text("")
 
-    def save_preset(self, newpreset, presetlist):
-        if newpreset.get_text() == "home":
-            cam.set_home()
-            presetlist.set_active_id(newpreset.get_text())
-            newpreset.set_text("")
-        else:
-            cam.set_preset(newpreset.get_text())
-            presetlist.append(newpreset.get_text(), newpreset.get_text())
-            presetlist.set_active_id(newpreset.get_text())
-            newpreset.set_text("")
+    def save_preset(self, newpreset, presetlist, nomodpresets):
+        if newpreset.get_text() not in nomodpresets:
+            if newpreset.get_text() == "home":
+                cam.set_home()
+                presetlist.set_active_id(newpreset.get_text())
+                newpreset.set_text("")
+            else:
+                cam.set_preset(newpreset.get_text())
+                presetlist.append(newpreset.get_text(), newpreset.get_text())
+                presetlist.set_active_id(newpreset.get_text())
+                newpreset.set_text("")
 
     # reset all settings
     def reset(self, button):

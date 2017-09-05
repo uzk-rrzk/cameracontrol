@@ -77,12 +77,12 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
         record-preset = 0
         idle-preset = 5
 
-* It is also possible to determine which presets should be modifiable and which not. The following example sets presets from 1-4 modifiable:
+* It is also possible to determine which presets should be non-modifiable. The following example sets presets 0 and 5 non-modifiable:
         
         [camctrl]
         backend = visca
         serial-port = /dev/ttyS0
-        mod-presets = 1,2,3,4
+        nomod-presets = 0,5
 
 ### camctrl-onvif ###
 * Infinite number of presets with full names like "record", "idle", "desk", etc. 
@@ -93,3 +93,9 @@ Galicaster plugin to control PTZ cameras compatible with VISCA and ONVIF protoco
         backend = onvif
         record-preset = record
         idle-preset = idle
+
+* The onvif backend also allows to set non-modifiable presets, just add for example:
+
+        [camctrl]
+        backend = onvif
+        nomod-presets = idle,record 
