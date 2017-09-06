@@ -104,7 +104,7 @@ def init():
         # initiate the visca user interface
         dispatcher.connect("init", init_visca_ui)
     else:
-        logger.warn("WARNING: You have to choose a backend in the config file before starting Galicaster, otherwise the cameracontrol plugin does not work.")
+        logger.warn("You have to choose a backend in the config file before starting Galicaster, otherwise the cameracontrol plugin does not work.")
         raise RuntimeError("No backend for the cameracontrol plugin defined.") 
     logger.info("Camera connected.")
 
@@ -159,12 +159,28 @@ def init_visca_ui(element):
     others = ["on", "off", "reset", "show_pref", "home"]
     
     # object initialisation
-    # preset buttons
+    # preset button
     presetbutton = builder.get_object("preset")
     presetbutton.add(get_stock_icon("preset"))
+
+    # load non-modifiable presets
+    nomodstring = config.get(NOMOD_PRESETS_KEY)
+    if nomodstring is not None:
+        nomodpresets = []
+        for i in nomodstring.split(","):
+            try:
+                nomodpresets.append(int(i))
+            except:
+                logger.warn("Invalid nomod-presets argument: '{}'. Acceptable values are from 0 to 5.".format(i))
+    else:
+        nomodpresets = None
+   
+    # preset buttons
     for i in range(6):
         button = builder.get_object(str(i+1))
-        button.connect("clicked", str_to_module("visca_interface", "set_preset"), presetbutton, i)
+        button.connect("clicked", visca.set_preset, presetbutton, i, nomodpresets)
+    
+    presetbutton.connect("clicked", visca.nomod_presets, nomodpresets)
 
     # scales and movement/zoom buttons
     for i in scales:
@@ -277,8 +293,13 @@ def init_onvif_ui(element):
     presetdelbutton = builder.get_object("presetdel")
     presetdelbutton.add(get_stock_icon("presetdel"))
     
-    # non-modifiable presets 
-    nomodpresets = config.get(NOMOD_PRESETS_KEY)
+    # load non-modifiable presets
+    nomodstring = config.get(NOMOD_PRESETS_KEY)
+    if nomodstring is not None:
+        nomodpresets = [x.strip() for x in nomodstring.split(',') if x != '']
+        print(nomodpresets)
+    else:
+        nomodpresets = None
 
     # connect preset functions
     presetlist.connect("changed", onvif.change_preset, newpreset, presetdelbutton, nomodpresets)
@@ -384,15 +405,28 @@ class visca_interface():
         pysca.zoom(DEFAULT_DEVICE, pysca.ZOOM_ACTION_STOP)
 
     # preset functions
-    def set_preset(self, button, presetbutton, i):
+    def set_preset(self, button, presetbutton, i, nomodpresets):
         if presetbutton.get_active():
-            nomodpresets = config.get(NOMOD_PRESETS_KEY)
-            if (nomodpresets is None) or (str(i) not in nomodpresets):
+            if (nomodpresets is None) or (i not in nomodpresets):
                 pysca.set_memory(DEFAULT_DEVICE, i)
             presetbutton.set_active(False)
         else:
             pysca.recall_memory(DEFAULT_DEVICE, i)
 
+    # set buttons insensitive if non-modifiable
+    def nomod_presets(self, button, nomodpresets):
+        if button.get_active():
+            for i in range(6):
+                button = builder.get_object(str(i+1))
+                if i in nomodpresets:
+                    button.set_sensitive(False)
+        else:
+            for i in range(6):
+                button = builder.get_object(str(i+1))
+                button.set_sensitive(True)
+
+
+            
     # brightness scale
     def set_bright(self, scale, scalelabel):
         scalelabel.set_text(str(int(scale.get_value())))
