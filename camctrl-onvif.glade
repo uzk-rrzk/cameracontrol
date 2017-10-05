@@ -236,13 +236,17 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
             </child>
             <child>
               <object class="GtkEntry" id="newpreset">
+                <property name="name">newpreset</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="tooltip_text" translatable="yes">Save the current position to a new preset. Press Enter or click on icon to save.</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
+                <property name="has_frame">False</property>
                 <property name="width_chars">15</property>
+                <property name="progress_pulse_step">1</property>
                 <property name="primary_icon_name">window-new</property>
+                <property name="secondary_icon_activatable">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -441,8 +445,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
                 <property name="receives_default">False</property>
                 <property name="margin_right">5</property>
                 <property name="image">dummyimg</property>
-                <property name="xalign">0.51999998092651367</property>
-                <property name="yalign">0.51999998092651367</property>
+                <property name="yalign">0.49999997019767761</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -457,6 +460,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Control</property>
                 <property name="use_markup">True</property>
+                <property name="ellipsize">start</property>
               </object>
               <packing>
                 <property name="expand">False</property>

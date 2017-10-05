@@ -297,7 +297,6 @@ def init_onvif_ui(element):
     nomodstring = config.get(NOMOD_PRESETS_KEY)
     if nomodstring is not None:
         nomodpresets = [x.strip() for x in nomodstring.split(',') if x != '']
-        print(nomodpresets)
     else:
         nomodpresets = None
 
@@ -629,11 +628,19 @@ class onvif_interface():
                 cam.set_home()
                 presetlist.set_active_id(newpreset.get_text())
                 newpreset.set_text("")
+            elif newpreset.get_text() == "":
+                newpreset.props.secondary_icon_name = "gtk-dialog-error"
             else:
-                cam.set_preset(newpreset.get_text())
-                presetlist.append(newpreset.get_text(), newpreset.get_text())
-                presetlist.set_active_id(newpreset.get_text())
-                newpreset.set_text("")
+                try:
+                    cam.set_preset(newpreset.get_text())
+                    presetlist.append(newpreset.get_text(), newpreset.get_text())
+                    presetlist.set_active_id(newpreset.get_text())
+                    newpreset.props.secondary_icon_name = "gtk-ok"
+                    newpreset.set_text("")
+                except:
+                    newpreset.props.secondary_icon_name = "gtk-dialog-error"
+        else:
+            newpreset.props.secondary_icon_name = "gtk-dialog-error"
 
     def save_preset(self, newpreset, presetlist, nomodpresets):
         if newpreset.get_text() not in nomodpresets:
@@ -641,11 +648,20 @@ class onvif_interface():
                 cam.set_home()
                 presetlist.set_active_id(newpreset.get_text())
                 newpreset.set_text("")
+            elif newpreset.get_text() == "":
+                newpreset.props.secondary_icon_name = "gtk-dialog-error"
             else:
-                cam.set_preset(newpreset.get_text())
-                presetlist.append(newpreset.get_text(), newpreset.get_text())
-                presetlist.set_active_id(newpreset.get_text())
-                newpreset.set_text("")
+                try:
+                    cam.set_preset(newpreset.get_text())
+                    presetlist.append(newpreset.get_text(), newpreset.get_text())
+                    presetlist.set_active_id(newpreset.get_text())
+                    newpreset.props.secondary_icon_name = "gtk-ok"
+                    newpreset.set_text("")
+                except:
+                    newpreset.props.secondary_icon_name = "gtk-dialog-error"
+        else:
+            newpreset.props.secondary_icon_name = "gtk-dialog-error"
+                #  newpreset.props.secondary_icon_sensitive = True
 
     # reset all settings
     def reset(self, button):
