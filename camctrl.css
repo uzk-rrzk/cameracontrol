@@ -115,27 +115,3 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. */
     /* font-size: 9px; */
     font-weight: lighter;
 }
-/* #newpreset{ */
-    /* border: 1.5px solid shade(gray,1.5); */
-/* } */
-/* #newpreset:focus{ */
-    /* border: 1.5px solid shade(darkorange,1.5); */
-/* } */
-.entry.pulse{
-background: black;
-color: black;
-}
-.entry progress{
-background: black;
-color: black;
-}
-.entry progress.pulse{
-background: black;
-color: black;
-}
-#newpreset process,
-#newpreset .pulse{
-    border: 1.5px solid shade(gray,1.5);
-    color: black;
-    background: black;
-}
