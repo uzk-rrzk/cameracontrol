@@ -61,6 +61,7 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
     <property name="label" translatable="yes">Control</property>
     <property name="xalign">0.20000000298023224</property>
   </object>
+  <object class="GtkListStore" id="preset_list"/>
   <object class="GtkImage" id="presetdelimg">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -195,14 +196,10 @@ along with the camctrl plugin. If not, see <http://www.gnu.org/licenses/>. -->
                 <property name="valign">center</property>
                 <property name="spacing">5</property>
                 <child>
-                  <object class="GtkComboBoxText" id="preset_list">
+                  <object class="GtkComboBox" id="presetbox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">List all saved presets.</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="button_sensitivity">on</property>
-                    <property name="popup_fixed_width">False</property>
+                    <property name="model">preset_list</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>

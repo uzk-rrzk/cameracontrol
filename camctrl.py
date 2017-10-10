@@ -20,6 +20,7 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 
+import string
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject, Pango
 from galicaster.core import context
 from galicaster.classui import get_ui_path
@@ -288,6 +289,7 @@ def init_onvif_ui(element):
     # preset buttons
     # to set a new preset
     newpreset = builder.get_object("newpreset")
+    entry = builder.get_object("entry")
 
     # to delete a preset
     presetdelbutton = builder.get_object("presetdel")
@@ -304,6 +306,9 @@ def init_onvif_ui(element):
     presetlist.connect("changed", onvif.change_preset, newpreset, presetdelbutton, nomodpresets)
     newpreset.connect("activate", onvif.save_preset, presetlist, nomodpresets)
     newpreset.connect("icon-press", onvif.save_preset_icon, presetlist, nomodpresets)
+    newpreset.connect("focus-out-event", onvif.focus_out)
+    entry.connect("inserted-text", onvif.check_entry_ins, newpreset, presetlist, nomodpresets)
+    entry.connect("deleted-text", onvif.check_entry_del, newpreset, presetlist, nomodpresets)
     presetdelbutton.connect("clicked", onvif.empty_entry, presetlist)
 
     # scales and movement/zoom buttons
@@ -622,6 +627,47 @@ class onvif_interface():
         elif not presetdelbutton.get_active():
             presetlist.insert(0, "home", "home")
 
+
+    def check_entry_ins(self, entry, position, chars, n_chars, newpreset, presetlist, nomodpresets):
+        entrylist = [x.strip() for x in newpreset.get_text().split() if x != ' ']
+        if len(entrylist) == 1:
+            entry = entrylist[0] 
+            if entry not in nomodpresets:
+                if check_string(entry):
+                    newpreset.props.secondary_icon_name = None
+                else:
+                    newpreset.props.secondary_icon_name = "gtk-dialog-error"
+                    newpreset.set_icon_tooltip_text(1, "Character not allowed. (a-z,A-Z,0-9,-,_)")
+            else:
+                newpreset.props.secondary_icon_name = "gtk-dialog-error"
+                newpreset.set_icon_tooltip_text(1, "Overwriting non-modifiable presets is not allowed.")
+        else:
+            newpreset.props.secondary_icon_name = "gtk-dialog-error"
+            newpreset.set_icon_tooltip_text(1, "Preset names must consist of at least one character and only one continuous word is allowed.")
+        if newpreset.get_text() == "":
+                    newpreset.props.secondary_icon_name = None
+
+
+    def check_entry_del(self, entry, position, n_chars, newpreset, presetlist, nomodpresets):
+        entrylist = [x.strip() for x in newpreset.get_text().split() if x != ' ']
+        if len(entrylist) == 1:
+            entry = entrylist[0] 
+            if entry not in nomodpresets:
+                if check_string(entry):
+                    newpreset.props.secondary_icon_name = None
+                else:
+                    newpreset.props.secondary_icon_name = "gtk-dialog-error"
+                    newpreset.set_icon_tooltip_text(1, "Character not allowed. (a-z,A-Z,0-9,-,_)")
+            else:
+                newpreset.props.secondary_icon_name = "gtk-dialog-error"
+                newpreset.set_icon_tooltip_text(1, "Overwriting non-modifiable presets is not allowed.")
+        else:
+            newpreset.props.secondary_icon_name = "gtk-dialog-error"
+            newpreset.set_icon_tooltip_text(1, "Preset names must consist of at least one character and only one continuous word is allowed.")
+        if newpreset.get_text() == "":
+                    newpreset.props.secondary_icon_name = None
+
+
     def save_preset_icon(self, newpreset, pos, event, presetlist, nomodpresets):
         entrylist = [x.strip() for x in newpreset.get_text().split() if x != ' ']
         if len(entrylist) == 1:
@@ -630,26 +676,23 @@ class onvif_interface():
                 if entry == "home":
                     cam.set_home()
                     presetlist.set_active_id(entry)
+                    newpreset.props.secondary_icon_name = "gtk-ok"
+                    newpreset.set_icon_tooltip_text(1, "Home preset succesfully saved.")
                     newpreset.set_text("")
                 else:
                     try:
                         cam.set_preset(entry)
                         presetlist.append(entry, entry)
                         presetlist.set_active_id(entry)
+                        newpreset.set_text("")
                         newpreset.props.secondary_icon_name = "gtk-ok"
                         newpreset.set_icon_tooltip_text(1, "Preset succesfully saved.")
-                        newpreset.set_text("")
                     except:
                         newpreset.props.secondary_icon_name = "gtk-dialog-error"
-                        newpreset.set_icon_tooltip_text(1, "Preset names are unique and no special characters are allowed.")
+                        newpreset.set_icon_tooltip_text(1, "Preset name already exists.")
 
-            else:
-                newpreset.props.secondary_icon_name = "gtk-dialog-error"
-                newpreset.set_icon_tooltip_text(1, "Overwriting non-modifiable presets is not allowed.")
-        else:
-            newpreset.props.secondary_icon_name = "gtk-dialog-error"
-            newpreset.set_icon_tooltip_text(1, "Preset names must consist of at least one character and only one continuous word is allowed.")
-
+    def focus_out(self, newpreset, event):
+        newpreset.props.secondary_icon_name = None
 
     def save_preset(self, newpreset, presetlist, nomodpresets):
         entrylist = [x.strip() for x in newpreset.get_text().split() if x != ' ']
@@ -659,25 +702,27 @@ class onvif_interface():
                 if entry == "home":
                     cam.set_home()
                     presetlist.set_active_id(entry)
+                    newpreset.props.secondary_icon_name = "gtk-ok"
+                    newpreset.set_icon_tooltip_text(1, "Home preset succesfully saved.")
                     newpreset.set_text("")
                 else:
                     try:
                         cam.set_preset(entry)
                         presetlist.append(entry, entry)
                         presetlist.set_active_id(entry)
+                        newpreset.set_text("")
                         newpreset.props.secondary_icon_name = "gtk-ok"
                         newpreset.set_icon_tooltip_text(1, "Preset succesfully saved.")
-                        newpreset.set_text("")
                     except:
                         newpreset.props.secondary_icon_name = "gtk-dialog-error"
-                        newpreset.set_icon_tooltip_text(1, "Preset names are unique and no special characters are allowed.")
+                        newpreset.set_icon_tooltip_text(1, "Preset name already exists.")
 
-            else:
-                newpreset.props.secondary_icon_name = "gtk-dialog-error"
-                newpreset.set_icon_tooltip_text(1, "Overwriting non-modifiable presets is not allowed.")
-        else:
-            newpreset.props.secondary_icon_name = "gtk-dialog-error"
-            newpreset.set_icon_tooltip_text(1, "Preset names must consist of at least one character and only one continuous word is allowed.")
+            #  else:
+                #  newpreset.props.secondary_icon_name = "gtk-dialog-error"
+                #  newpreset.set_icon_tooltip_text(1, "Overwriting non-modifiable presets is not allowed.")
+        #  else:
+            #  newpreset.props.secondary_icon_name = "gtk-dialog-error"
+            #  newpreset.set_icon_tooltip_text(1, "Preset names must consist of at least one character and only one continuous word is allowed.")
 
     # reset all settings
     def reset(self, button):
@@ -811,3 +856,7 @@ def get_label(labelname):
 # to call the object use str_to_module(module, func)()
 def str_to_module(module, func):
     return getattr(globals()[module](), func)
+
+def check_string(entry):
+    if set(entry) <= set(string.ascii_uppercase + string.ascii_lowercase + string.digits + '-' + '_'):
+        return True
